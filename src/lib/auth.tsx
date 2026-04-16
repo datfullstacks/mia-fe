@@ -32,7 +32,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
     try {
       const response = await fetchMe(token)
       setCurrentUser(response.user)
-      setToken(SESSION_SENTINEL)
+      setToken((currentToken) => {
+        if (currentToken && currentToken !== SESSION_SENTINEL) {
+          return currentToken
+        }
+
+        return SESSION_SENTINEL
+      })
       setCsrfToken(response.csrfToken)
     } catch {
       setToken(null)
