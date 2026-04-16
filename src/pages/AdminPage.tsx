@@ -231,8 +231,8 @@ export function AdminPage() {
         <p className="panel-tag">Admin portal</p>
         <h2>Admin overview for the rebuilt stack</h2>
         <p className="helper-copy">
-          This page now reads live metrics from the Express backend and approves manual Pro
-          upgrade requests in-place.
+          This page now reads live metrics from the Express backend and lets admin review amber
+          packages, mail delivery, and archive activity in one place.
         </p>
 
         {error ? <p className="feedback error">{error}</p> : null}
@@ -259,7 +259,7 @@ export function AdminPage() {
                 <strong>{overview.stats.users.totalUsers}</strong>
               </article>
               <article className="metric-card">
-                <span>Pro users</span>
+                <span>Legacy Pro users</span>
                 <strong>{overview.stats.users.proUsers}</strong>
               </article>
               <article className="metric-card">
@@ -430,7 +430,7 @@ export function AdminPage() {
                 <article className="phone-card">
                   <div className="panel-heading">
                     <p className="panel-tag">Payments</p>
-                    <h3>Approve manual Pro upgrades</h3>
+                    <h3>Approve amber packages</h3>
                   </div>
                   <div className="toolbar-grid">
                     <label className="stacked-field">

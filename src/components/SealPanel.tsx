@@ -8,7 +8,7 @@ function createInitialOpenAt() {
 }
 
 export function SealPanel() {
-  const { currentUser, token } = useAuth()
+  const { currentUser, token, refreshSession } = useAuth()
   const [form, setForm] = useState(() => ({
     recipientEmail: '',
     message: '',
@@ -45,6 +45,7 @@ export function SealPanel() {
         openAt: nextOpenAt,
         passcode: '',
       })
+      await refreshSession()
       notifyAmbersChanged()
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Failed to create amber')
@@ -61,7 +62,12 @@ export function SealPanel() {
       </div>
 
       {currentUser ? (
-        <p className="helper-copy">Signed in as {currentUser.name}</p>
+        <div className="seal-quota-copy">
+          <p className="helper-copy">Signed in as {currentUser.name}</p>
+          <p className="helper-copy">
+            Remaining amber: {currentUser.amberQuota.remainingCredits} / {currentUser.amberQuota.totalCredits}
+          </p>
+        </div>
       ) : (
         <p className="feedback error">Login is required to use Seal.</p>
       )}
@@ -116,7 +122,11 @@ export function SealPanel() {
           />
         </label>
 
-        <button className="phone-button primary" disabled={isSubmitting || !currentUser} type="submit">
+        <button
+          className="phone-button primary"
+          disabled={isSubmitting || !currentUser || currentUser.amberQuota.remainingCredits < 1}
+          type="submit"
+        >
           {isSubmitting ? 'Sealing...' : 'Seal amber'}
         </button>
       </form>

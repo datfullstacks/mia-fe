@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { createPayment, fetchPayment, fetchPayments, type Payment } from '../lib/api'
+import { createPayment, fetchPayment, fetchPaymentPlans, fetchPayments, type Payment, type PaymentPlan } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { formatDateTime } from '../lib/time'
 import { StatusPill } from './StatusPill'
@@ -42,10 +42,12 @@ function formatCountdown(expiresAt: string | null, now: number) {
 
 export function PricingPanel() {
   const { currentUser, token, refreshSession } = useAuth()
+  const [plans, setPlans] = useState<PaymentPlan[]>([])
+  const [selectedPlanId, setSelectedPlanId] = useState('')
   const [payments, setPayments] = useState<Payment[]>([])
   const [activePaymentId, setActivePaymentId] = useState<string | null>(null)
   const [activePayment, setActivePayment] = useState<Payment | null>(null)
-  const [note, setNote] = useState('MIA Pro upgrade')
+  const [note, setNote] = useState('Amber package purchase')
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<string | null>(null)
   const [now, setNow] = useState(() => Date.now())
@@ -62,6 +64,20 @@ export function PricingPanel() {
 
       return current.map((item) => (item.id === payment.id ? payment : item))
     })
+  }, [])
+
+  useEffect(() => {
+    async function loadPlans() {
+      try {
+        const response = await fetchPaymentPlans()
+        setPlans(response.items)
+        setSelectedPlanId((current) => current || response.items[0]?.id || '')
+      } catch (nextError) {
+        setError(nextError instanceof Error ? nextError.message : 'Failed to load pricing plans')
+      }
+    }
+
+    void loadPlans()
   }, [])
 
   const loadPayments = useCallback(async () => {
@@ -99,14 +115,14 @@ export function PricingPanel() {
         const response = await fetchPayment(token, paymentId)
         syncPaymentIntoState(response.item)
 
-        if (SUCCESS_STATUSES.has(response.item.status) && currentUser?.tier !== 'pro') {
+        if (SUCCESS_STATUSES.has(response.item.status)) {
           await refreshSession()
         }
       } catch (nextError) {
         setError(nextError instanceof Error ? nextError.message : 'Failed to refresh payment')
       }
     },
-    [currentUser?.tier, refreshSession, syncPaymentIntoState, token],
+    [refreshSession, syncPaymentIntoState, token],
   )
 
   useEffect(() => {
@@ -152,9 +168,14 @@ export function PricingPanel() {
         throw new Error('Login is required to create a payment QR')
       }
 
+      if (!selectedPlanId) {
+        throw new Error('Choose a pricing package first')
+      }
+
       setIsCreating(true)
       const response = await createPayment(token, {
         note: note,
+        planId: selectedPlanId,
       })
       syncPaymentIntoState(response.item)
       setActivePaymentId(response.item.id)
@@ -169,12 +190,14 @@ export function PricingPanel() {
   }
 
   const countdown = useMemo(() => formatCountdown(activePayment?.expiresAt || null, now), [activePayment, now])
+  const selectedPlan =
+    plans.find((plan) => plan.id === selectedPlanId) || plans[0] || null
 
   return (
     <div className="phone-panel">
       <div className="panel-heading">
         <p className="panel-tag">Pricing</p>
-        <h3>Upgrade to Pro</h3>
+        <h3>Buy more amber</h3>
       </div>
 
       <div className="pricing-grid">
@@ -183,22 +206,37 @@ export function PricingPanel() {
             <img alt={`QR for ${activePayment.paymentRef}`} className="qr-image" src={activePayment.qrUrl} />
           ) : (
             <div className="qr-placeholder">
-              <span>MIA PRO</span>
+              <span>MIA AMBER</span>
             </div>
           )}
         </div>
         <div className="pricing-copy">
           <p>
-            Pick the Pro upgrade, scan the dedicated SePay QR, and keep the transfer description
-            unchanged. MIA will activate Pro automatically when the webhook matches the payment ref
-            and amount.
+            New accounts start with 3 free amber. Pick a package, scan the SePay QR, and keep the
+            transfer description unchanged. MIA will add the purchased amber automatically when the
+            webhook matches the payment ref and amount.
           </p>
           <ul className="plain-list compact">
-            <li>Current tier: {currentUser ? currentUser.tier : 'guest'}</li>
-            <li>Flow target: QR scan, transfer, webhook, auto-activate</li>
-            <li>Admin fallback remains available for review-only cases</li>
+            <li>Remaining amber: {currentUser ? currentUser.amberQuota.remainingCredits : 0}</li>
+            <li>Used amber: {currentUser ? currentUser.amberQuota.usedCredits : 0}</li>
+            <li>Admin fallback remains available for review-only cases.</li>
           </ul>
         </div>
+      </div>
+
+      <div className="phone-card-list">
+        {plans.map((plan) => (
+          <button
+            key={plan.id}
+            className={selectedPlanId === plan.id ? 'pricing-plan-card active' : 'pricing-plan-card'}
+            onClick={() => setSelectedPlanId(plan.id)}
+            type="button"
+          >
+            <span className="mono-label">{plan.amount.toLocaleString('vi-VN')} VND</span>
+            <strong>{plan.amberCredits} amber</strong>
+            <small>{plan.label}</small>
+          </button>
+        ))}
       </div>
 
       <label className="stacked-field">
@@ -208,14 +246,14 @@ export function PricingPanel() {
 
       <button
         className="phone-button primary"
-        disabled={!currentUser || currentUser.tier === 'pro' || isCreating}
+        disabled={!currentUser || isCreating || !selectedPlan}
         onClick={() => void handleRequest()}
         type="button"
       >
-        {currentUser?.tier === 'pro'
-          ? 'Pro already active'
-          : isCreating
-            ? 'Preparing QR...'
+        {isCreating
+          ? 'Preparing QR...'
+          : selectedPlan
+            ? `Create QR for ${selectedPlan.amberCredits} amber`
             : 'Create SePay QR'}
       </button>
 
@@ -231,6 +269,9 @@ export function PricingPanel() {
             </div>
             <StatusPill status={activePayment.status} />
           </div>
+          <p className="helper-copy">
+            {activePayment.planLabel} · {activePayment.amberCredits} amber
+          </p>
           <dl className="mini-meta">
             <div>
               <dt>Bank</dt>
@@ -263,10 +304,10 @@ export function PricingPanel() {
             </div>
           ) : null}
           {activePayment.status === 'paid' ? (
-            <p className="feedback success">Payment confirmed by SePay. Pro is now active.</p>
+            <p className="feedback success">Payment confirmed by SePay. Amber has been added to your balance.</p>
           ) : null}
           {activePayment.status === 'approved_manual' ? (
-            <p className="feedback success">This order was manually approved by admin.</p>
+            <p className="feedback success">This amber package was manually approved by admin.</p>
           ) : null}
         </article>
       ) : null}
@@ -281,6 +322,7 @@ export function PricingPanel() {
               </div>
               <StatusPill status={payment.status} />
             </div>
+            <p>{payment.planLabel} · {payment.amberCredits} amber</p>
             <p>{payment.note || 'No note'}</p>
             <dl className="mini-meta">
               <div>

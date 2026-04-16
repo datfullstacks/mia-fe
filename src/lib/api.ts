@@ -5,6 +5,13 @@ export interface User {
   tier: 'free' | 'pro'
   isAdmin: boolean
   createdAt: string
+  amberQuota: {
+    freeCredits: number
+    purchasedCredits: number
+    totalCredits: number
+    usedCredits: number
+    remainingCredits: number
+  }
 }
 
 export interface Amber {
@@ -36,9 +43,19 @@ export interface AmberListOptions {
 
 export type PaymentStatus = 'pending' | 'pending_review' | 'paid' | 'approved_manual' | 'expired'
 
+export interface PaymentPlan {
+  id: string
+  amount: number
+  amberCredits: number
+  label: string
+}
+
 export interface Payment {
   id: string
   paymentRef: string
+  planId: string
+  planLabel: string
+  amberCredits: number
   amount: number
   note: string
   status: PaymentStatus
@@ -368,13 +385,17 @@ export function fetchPayments(token?: string | null) {
   })
 }
 
+export function fetchPaymentPlans() {
+  return request<{ items: PaymentPlan[] }>('/api/payment-plans')
+}
+
 export function fetchPayment(token: string | null | undefined, paymentId: string) {
   return request<{ item: Payment }>(`/api/payments/${paymentId}`, {
     headers: authHeaders(token),
   })
 }
 
-export function createPayment(token: string | null | undefined, payload: { note: string }) {
+export function createPayment(token: string | null | undefined, payload: { note: string; planId: string }) {
   return request<{ item: Payment }>('/api/payments', {
     method: 'POST',
     headers: authHeaders(token),

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { AmberPanel } from '../components/AmberPanel'
 import { HistoryPanel } from '../components/HistoryPanel'
 import { PricingPanel } from '../components/PricingPanel'
 import { SealPanel } from '../components/SealPanel'
@@ -12,16 +13,33 @@ import { useAuth } from '../lib/auth'
 import { formatClock, formatDateTime, getCountdownText } from '../lib/time'
 
 type RoomObject = 'clock' | 'vinyl' | 'radio' | 'calendar' | 'diary' | 'amber'
-type PhoneApp = 'seal' | 'unseal' | 'history' | 'pricing' | 'settings'
+type PhoneApp = 'seal' | 'unseal' | 'amber' | 'history' | 'pricing' | 'settings'
 
-const phoneApps: PhoneApp[] = ['seal', 'unseal', 'history', 'pricing', 'settings']
+const phoneApps: PhoneApp[] = ['seal', 'unseal', 'amber', 'history', 'pricing', 'settings']
 const guestPhoneApps: PhoneApp[] = ['unseal', 'settings']
 const phoneAppLabels: Record<PhoneApp, string> = {
   seal: 'Seal',
   unseal: 'Unseal',
+  amber: 'Amber',
   history: 'History',
   pricing: 'Pricing',
   settings: 'Settings',
+}
+const phoneAppCaptions: Record<PhoneApp, string> = {
+  seal: 'Create new amber',
+  unseal: 'Open by code',
+  amber: 'Balance and usage',
+  history: 'Created ambers',
+  pricing: 'Buy more amber',
+  settings: 'Account and logout',
+}
+const phoneAppIcons: Record<PhoneApp, string> = {
+  seal: 'SL',
+  unseal: 'UN',
+  amber: 'AM',
+  history: 'HS',
+  pricing: 'PR',
+  settings: 'ST',
 }
 
 const vinylTracks = [
@@ -177,7 +195,9 @@ export function RoomPage() {
   const initialActivePhoneApp =
     currentUser || guestPhoneApps.includes(initialPhoneState.app) ? initialPhoneState.app : 'unseal'
   const [isPhoneOpen, setIsPhoneOpen] = useState(initialPhoneState.isOpen)
-  const [activePhoneApp, setActivePhoneApp] = useState<PhoneApp>(initialActivePhoneApp)
+  const [activePhoneApp, setActivePhoneApp] = useState<PhoneApp | null>(
+    initialPhoneState.isOpen ? initialActivePhoneApp : null,
+  )
   const [activeObject, setActiveObject] = useState<RoomObject | null>(null)
   const [clock, setClock] = useState(() => new Date())
   const [roomAmbers, setRoomAmbers] = useState<Amber[]>([])
@@ -255,7 +275,19 @@ export function RoomPage() {
     })
   }, [loadRoomAmbers])
 
-  function openPhone(app: PhoneApp) {
+  useEffect(() => {
+    if (activePhoneApp && !availablePhoneApps.includes(activePhoneApp)) {
+      setActivePhoneApp(null)
+    }
+  }, [activePhoneApp, availablePhoneApps])
+
+  function openPhone(app?: PhoneApp) {
+    if (!app) {
+      setActivePhoneApp(null)
+      setIsPhoneOpen(true)
+      return
+    }
+
     const nextApp = currentUser || guestPhoneApps.includes(app) ? app : 'unseal'
     setActivePhoneApp(nextApp)
     setIsPhoneOpen(true)
@@ -272,6 +304,14 @@ export function RoomPage() {
         return <SealPanel />
       case 'unseal':
         return <UnsealPanel />
+      case 'amber':
+        return (
+          <AmberPanel
+            onOpenHistory={() => setActivePhoneApp('history')}
+            onOpenPricing={() => setActivePhoneApp('pricing')}
+            onOpenSeal={() => setActivePhoneApp('seal')}
+          />
+        )
       case 'history':
         return <HistoryPanel />
       case 'pricing':
@@ -407,8 +447,8 @@ export function RoomPage() {
                 <h3>{currentUser ? 'Amber tray' : 'Guest path'}</h3>
               </div>
               {currentUser ? (
-                <button className="phone-button ghost" onClick={() => openPhone('history')} type="button">
-                  History
+                <button className="phone-button ghost" onClick={() => openPhone('amber')} type="button">
+                  Manage
                 </button>
               ) : (
                 <button className="phone-button ghost" onClick={() => openPhone('unseal')} type="button">
@@ -477,7 +517,7 @@ export function RoomPage() {
 
           <button
             className="room-object object-phone"
-            onClick={() => openPhone(currentUser ? 'seal' : 'unseal')}
+            onClick={() => openPhone()}
             type="button"
           >
             <span className="object-dot" />
@@ -486,7 +526,7 @@ export function RoomPage() {
               <span />
             </div>
             <strong>Smartphone OS</strong>
-            <small>{currentUser ? 'Seal, history, pricing' : 'Guest unlock'}</small>
+            <small>{currentUser ? 'Open apps' : 'Guest apps'}</small>
           </button>
 
           {!isGuest || activeObject ? (
@@ -633,36 +673,55 @@ export function RoomPage() {
               <header className="phone-window-head">
                 <div>
                   <p className="panel-tag">Smartphone OS</p>
-                  <h3>{phoneAppLabels[activePhoneApp]}</h3>
+                  <h3>{activePhoneApp ? phoneAppLabels[activePhoneApp] : 'Home'}</h3>
                   <p className="helper-copy">
                     {currentUser
                       ? 'The phone is the operational layer inside the room.'
                       : 'Guest mode limits the phone to safe unlock-only access.'}
                   </p>
                 </div>
-                <button
-                  className="phone-button ghost"
-                  onClick={() => setIsPhoneOpen(false)}
-                  type="button"
-                >
-                  Close
-                </button>
-              </header>
-
-              <nav className="phone-tabs">
-                {availablePhoneApps.map((app) => (
+                <div className="button-row">
+                  {activePhoneApp ? (
+                    <button
+                      className="phone-button ghost"
+                      onClick={() => setActivePhoneApp(null)}
+                      type="button"
+                    >
+                      Home
+                    </button>
+                  ) : null}
                   <button
-                    key={app}
-                    className={activePhoneApp === app ? 'phone-tab active' : 'phone-tab'}
-                    onClick={() => setActivePhoneApp(app)}
+                    className="phone-button ghost"
+                    onClick={() => setIsPhoneOpen(false)}
                     type="button"
                   >
-                    {phoneAppLabels[app]}
+                    Close
                   </button>
-                ))}
-              </nav>
+                </div>
+              </header>
 
-              <div className="phone-app-body">{renderPhoneApp()}</div>
+              <div className="phone-app-body">
+                {activePhoneApp ? (
+                  renderPhoneApp()
+                ) : (
+                  <div className="phone-home-screen">
+                    <div className="phone-home-grid">
+                      {availablePhoneApps.map((app) => (
+                        <button
+                          key={app}
+                          className="phone-app-icon"
+                          onClick={() => setActivePhoneApp(app)}
+                          type="button"
+                        >
+                          <span className="phone-app-icon-badge">{phoneAppIcons[app]}</span>
+                          <strong>{phoneAppLabels[app]}</strong>
+                          <small>{phoneAppCaptions[app]}</small>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ) : null}
