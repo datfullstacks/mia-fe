@@ -287,39 +287,55 @@ select:focus-visible {
 }
 
 .room-shell {
-  padding: 28px 0 44px;
-}
-
-.room-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 22px;
-  padding: 18px 20px 22px;
-  border-radius: 32px;
-  border: 1px solid rgba(115, 73, 48, 0.1);
-  background:
-    radial-gradient(circle at right, rgba(247, 174, 96, 0.16), transparent 26%),
-    linear-gradient(140deg, rgba(50, 30, 23, 0.96), rgba(99, 57, 37, 0.82));
-  box-shadow: 0 18px 44px rgba(38, 21, 14, 0.16);
-}
-
-.room-topbar h1 {
-  font-size: clamp(2.8rem, 5vw, 4.8rem);
-  color: #fff1df;
-}
-
-.room-user-copy {
-  margin: 12px 0 0;
-  max-width: 620px;
-  color: rgba(248, 235, 219, 0.88);
+  width: 100%;
+  max-width: none;
+  min-height: 100vh;
+  margin: 0;
+  padding: 16px;
 }
 
 .room-topbar-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+}
+
+.room-workspace-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 58px;
+  padding: 0 2px 18px;
+}
+
+.room-workspace-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.workspace-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 239, 219, 0.12);
+  border: 1px solid rgba(255, 239, 219, 0.14);
+  color: #f5e7d4;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.workspace-copy {
+  color: rgba(245, 231, 212, 0.78);
+  font-size: 0.92rem;
+  font-weight: 600;
 }
 
 .room-nav-link {
@@ -345,8 +361,11 @@ select:focus-visible {
 }
 
 .room-frame {
+  display: flex;
+  flex-direction: column;
   border-radius: 38px;
   padding: 24px;
+  min-height: calc(100vh - 32px);
   background:
     radial-gradient(circle at top right, rgba(255, 209, 160, 0.2), transparent 26%),
     linear-gradient(180deg, rgba(58, 37, 25, 0.84), rgba(30, 18, 12, 0.72));
@@ -355,7 +374,8 @@ select:focus-visible {
 
 .room-stage {
   position: relative;
-  aspect-ratio: 16 / 9;
+  flex: 1 1 auto;
+  min-height: 760px;
   overflow: hidden;
   border-radius: 30px;
   isolation: isolate;
@@ -1291,6 +1311,11 @@ select:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  .room-workspace-bar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .room-layout {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows:
@@ -1339,7 +1364,7 @@ select:focus-visible {
 }
 
 @media (max-width: 920px) {
-  .room-topbar,
+  .room-workspace-bar,
   .panel-heading.inline,
   .phone-card-head {
     flex-direction: column;
@@ -1347,11 +1372,11 @@ select:focus-visible {
   }
 
   .room-frame {
+    min-height: calc(100vh - 24px);
     padding: 12px;
   }
 
   .room-stage {
-    aspect-ratio: auto;
     min-height: 980px;
   }
 

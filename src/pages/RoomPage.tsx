@@ -191,27 +191,24 @@ export function RoomPage() {
 
   return (
     <div className="room-shell">
-      <header className="room-topbar">
-        <div>
-          <p className="eyebrow">The Room</p>
-          <h1>The Memory Room</h1>
-          <p className="room-user-copy">
-            {currentUser
-              ? `Signed in as ${currentUser.name}. The room now acts like a living shell around Seal, History, Pricing, and guest-safe Unseal.`
-              : 'Guest mode keeps the room explorable, but the phone opens only into Unseal until you pass through the gate.'}
-          </p>
-        </div>
-        <div className="room-topbar-actions">
-          <Link className="room-nav-link" to="/gate">
-            Back to Gate
-          </Link>
-          <Link className="room-nav-link" to="/admin">
-            Admin
-          </Link>
-        </div>
-      </header>
-
       <section className="room-frame">
+        <div className="room-workspace-bar">
+          <div className="room-workspace-meta">
+            <span className="workspace-pill">MIA Workspace</span>
+            <span className="workspace-copy">
+              {currentUser ? `${currentUser.name} signed in` : 'Guest mode'}
+            </span>
+          </div>
+          <div className="room-topbar-actions">
+            <Link className="room-nav-link" to="/gate">
+              Gate
+            </Link>
+            <Link className="room-nav-link" to="/admin">
+              Admin
+            </Link>
+          </div>
+        </div>
+
         <div className={`room-stage stage-${timeSegment}`}>
           <div className="room-atmosphere" aria-hidden="true">
             <div className="room-glow room-glow-primary" />
