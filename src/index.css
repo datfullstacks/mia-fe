@@ -1,10 +1,33 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
-  font-family: "Manrope", "Trebuchet MS", sans-serif;
+  --font-body: "Manrope", "Trebuchet MS", sans-serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --color-text: #2e271f;
+  --color-text-strong: #2a2017;
+  --color-text-muted: #6a5a49;
+  --color-panel-border: rgba(96, 63, 30, 0.12);
+  --color-panel-surface: rgba(255, 250, 244, 0.84);
+  --color-panel-surface-strong: rgba(255, 250, 244, 0.92);
+  --color-amber-500: #a95d2d;
+  --color-amber-700: #6b3518;
+  --color-amber-900: #3f2416;
+  --color-cream-100: #fff3e7;
+  --color-cream-200: #f8ebdb;
+  --color-danger: #a23030;
+  --color-success: #2c7d47;
+  --shadow-soft: 0 20px 50px rgba(88, 57, 29, 0.08);
+  --shadow-room: 0 26px 80px rgba(29, 17, 10, 0.28);
+  --shadow-phone: 0 28px 70px rgba(17, 10, 9, 0.32);
+  --radius-panel: 30px;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --ring-focus: 0 0 0 3px rgba(233, 155, 91, 0.32);
+  --ease-standard: 180ms ease;
+  font-family: var(--font-body);
   line-height: 1.5;
   font-weight: 400;
-  color: #2e271f;
+  color: var(--color-text);
   background:
     radial-gradient(circle at top left, rgba(255, 228, 190, 0.95), transparent 34%),
     linear-gradient(180deg, #f6ebdc 0%, #ecdfcd 48%, #e5d0b8 100%);
@@ -28,6 +51,11 @@ body {
   margin: 0;
 }
 
+img {
+  display: block;
+  max-width: 100%;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -38,6 +66,20 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+::selection {
+  background: rgba(233, 155, 91, 0.28);
+  color: var(--color-amber-900);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-focus);
 }
 
 .eyebrow,
@@ -62,16 +104,16 @@ select {
 }
 
 .feedback.error {
-  color: #a23030;
+  color: var(--color-danger);
 }
 
 .feedback.success {
-  color: #2c7d47;
+  color: var(--color-success);
 }
 
 .helper-copy {
   margin: 0;
-  color: #6a5a49;
+  color: var(--color-text-muted);
 }
 
 .gate-shell,
@@ -97,12 +139,12 @@ select {
 .room-info-card,
 .room-object,
 .hero-card {
-  border: 1px solid rgba(96, 63, 30, 0.12);
-  box-shadow: 0 20px 50px rgba(88, 57, 29, 0.08);
+  border: 1px solid var(--color-panel-border);
+  box-shadow: var(--shadow-soft);
 }
 
 .gate-panel {
-  border-radius: 30px;
+  border-radius: var(--radius-panel);
   background: rgba(255, 250, 244, 0.8);
   padding: 32px;
 }
@@ -132,9 +174,9 @@ select {
 .panel-heading h4,
 .phone-window-head h3 {
   margin: 12px 0 0;
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--font-display);
   line-height: 1.05;
-  color: #2a2017;
+  color: var(--color-text-strong);
 }
 
 .gate-copy h1 {
@@ -193,6 +235,15 @@ select {
   padding: 14px 16px;
   background: rgba(255, 255, 255, 0.82);
   color: #2c231b;
+  transition: border-color var(--ease-standard), box-shadow var(--ease-standard), background var(--ease-standard);
+}
+
+.phone-form input:hover,
+.stacked-field select:hover,
+.stacked-field input:hover,
+.phone-form textarea:hover,
+.room-textarea:hover {
+  border-color: rgba(98, 66, 39, 0.28);
 }
 
 .phone-form textarea,
@@ -203,20 +254,22 @@ select {
 
 .phone-button {
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 12px 18px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
-}
-
-.phone-button:hover {
-  transform: scale(1.02);
+  transition:
+    transform var(--ease-standard),
+    box-shadow var(--ease-standard),
+    opacity var(--ease-standard),
+    background var(--ease-standard),
+    color var(--ease-standard);
 }
 
 .phone-button.primary {
-  background: linear-gradient(140deg, #a95d2d 0%, #6b3518 100%);
-  color: #fff3e7;
+  background: linear-gradient(140deg, var(--color-amber-500) 0%, var(--color-amber-700) 100%);
+  color: var(--color-cream-100);
+  box-shadow: 0 12px 24px rgba(96, 51, 27, 0.14);
 }
 
 .phone-button.ghost {
@@ -275,11 +328,14 @@ select {
   justify-content: center;
   min-height: 44px;
   padding: 0 18px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(255, 231, 204, 0.18);
   background: rgba(255, 241, 223, 0.08);
   color: #f5e7d4;
-  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+  transition:
+    transform var(--ease-standard),
+    background var(--ease-standard),
+    border-color var(--ease-standard);
 }
 
 .room-nav-link:hover {
@@ -294,7 +350,7 @@ select {
   background:
     radial-gradient(circle at top right, rgba(255, 209, 160, 0.2), transparent 26%),
     linear-gradient(180deg, rgba(58, 37, 25, 0.84), rgba(30, 18, 12, 0.72));
-  box-shadow: 0 26px 80px rgba(29, 17, 10, 0.28);
+  box-shadow: var(--shadow-room);
 }
 
 .room-stage {
@@ -302,6 +358,7 @@ select {
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 30px;
+  isolation: isolate;
   background:
     radial-gradient(circle at top, rgba(255, 206, 150, 0.18), transparent 24%),
     linear-gradient(180deg, #6c3f2f 0%, #4e2d24 22%, #2f1a19 68%, #1d1213 100%);
@@ -723,7 +780,7 @@ select {
   flex-direction: column;
   gap: 12px;
   padding: 22px;
-  border-radius: 24px;
+  border-radius: var(--radius-card);
   background:
     linear-gradient(180deg, rgba(255, 248, 239, 0.92), rgba(244, 228, 208, 0.88));
   color: #2d231a;
@@ -782,7 +839,7 @@ select {
   background:
     linear-gradient(180deg, rgba(247, 240, 230, 0.98), rgba(242, 228, 208, 0.98));
   animation: phoneIn 240ms ease-out;
-  box-shadow: 0 28px 70px rgba(17, 10, 9, 0.32);
+  box-shadow: var(--shadow-phone);
 }
 
 .phone-window-statusbar {
@@ -830,6 +887,8 @@ select {
 .phone-app-body {
   overflow: auto;
   padding-right: 4px;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .phone-panel {
@@ -868,6 +927,16 @@ select {
   border-radius: 22px;
   background: rgba(255, 252, 247, 0.86);
   border: 1px solid rgba(98, 66, 39, 0.1);
+  transition:
+    transform var(--ease-standard),
+    box-shadow var(--ease-standard),
+    border-color var(--ease-standard);
+}
+
+.phone-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(98, 66, 39, 0.16);
+  box-shadow: 0 16px 28px rgba(88, 57, 29, 0.08);
 }
 
 .phone-card-head {
@@ -1067,9 +1136,9 @@ select {
 }
 
 .panel {
-  border-radius: 30px;
+  border-radius: var(--radius-panel);
   padding: 28px;
-  background: rgba(255, 250, 244, 0.84);
+  background: var(--color-panel-surface);
 }
 
 .panel h2 {
@@ -1096,7 +1165,7 @@ select {
 
 .metric-card {
   padding: 18px;
-  border-radius: 24px;
+  border-radius: var(--radius-card);
   background: #fff7ef;
 }
 
@@ -1119,6 +1188,28 @@ select {
   justify-content: space-between;
   gap: 12px;
   padding: 4px 2px 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .phone-button:hover {
+    transform: scale(1.02);
+  }
+
+  .phone-tab:hover,
+  .chip:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @keyframes pulseDot {
