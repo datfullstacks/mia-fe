@@ -1,0 +1,880 @@
+:root {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #2e271f;
+  background:
+    radial-gradient(circle at top left, rgba(255, 228, 190, 0.95), transparent 34%),
+    linear-gradient(180deg, #f6ebdc 0%, #ecdfcd 48%, #e5d0b8 100%);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.eyebrow,
+.panel-tag,
+.hero-label {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #8f6034;
+}
+
+.subtle-link {
+  color: #f8ebdb;
+  opacity: 0.86;
+}
+
+.feedback {
+  margin: 0;
+  color: #5c4b3a;
+}
+
+.feedback.error {
+  color: #a23030;
+}
+
+.feedback.success {
+  color: #2c7d47;
+}
+
+.helper-copy {
+  margin: 0;
+  color: #6a5a49;
+}
+
+.gate-shell,
+.room-shell,
+.admin-shell {
+  width: min(1240px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.gate-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 24px;
+  align-items: center;
+  padding: 32px 0;
+}
+
+.gate-panel,
+.panel,
+.room-frame,
+.phone-window,
+.room-info-card,
+.room-object,
+.hero-card {
+  border: 1px solid rgba(96, 63, 30, 0.12);
+  box-shadow: 0 20px 50px rgba(88, 57, 29, 0.08);
+}
+
+.gate-panel {
+  border-radius: 30px;
+  background: rgba(255, 250, 244, 0.8);
+  padding: 32px;
+}
+
+.gate-copy {
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background:
+    linear-gradient(145deg, rgba(61, 43, 26, 0.92), rgba(121, 76, 33, 0.86)),
+    rgba(255, 250, 244, 0.8);
+  color: #f8ebdb;
+}
+
+.gate-copy .eyebrow {
+  color: #f3c28a;
+}
+
+.gate-copy h1,
+.gate-form h2,
+.room-topbar h1,
+.panel h2,
+.room-info-card h3,
+.panel-heading h3,
+.panel-heading h4,
+.phone-window-head h3 {
+  margin: 12px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.05;
+  color: #2a2017;
+}
+
+.gate-copy h1 {
+  color: #fff5e9;
+  font-size: clamp(2.8rem, 6vw, 5.2rem);
+}
+
+.gate-copy p:not(.eyebrow) {
+  max-width: 560px;
+  color: rgba(255, 239, 220, 0.88);
+}
+
+.gate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.gate-form h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.phone-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.phone-form.compact {
+  gap: 14px;
+}
+
+.phone-form label,
+.slider-field,
+.stacked-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 600;
+  color: #5c4937;
+}
+
+.phone-form input,
+.stacked-field select,
+.stacked-field input,
+.phone-form textarea,
+.room-textarea {
+  width: 100%;
+  border: 1px solid rgba(98, 66, 39, 0.18);
+  border-radius: 18px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #2c231b;
+}
+
+.phone-form textarea,
+.room-textarea {
+  min-height: 132px;
+  resize: vertical;
+}
+
+.phone-button {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+
+.phone-button:hover {
+  transform: scale(1.02);
+}
+
+.phone-button.primary {
+  background: linear-gradient(140deg, #a95d2d 0%, #6b3518 100%);
+  color: #fff3e7;
+}
+
+.phone-button.ghost {
+  background: rgba(255, 250, 244, 0.84);
+  color: #5c422d;
+}
+
+.inline-button {
+  margin-left: 8px;
+  padding: 6px 12px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.room-shell {
+  padding: 24px 0 40px;
+}
+
+.room-topbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 18px;
+}
+
+.room-topbar h1 {
+  font-size: clamp(2.2rem, 4.4vw, 4.1rem);
+}
+
+.room-user-copy {
+  margin: 12px 0 0;
+  max-width: 620px;
+  color: rgba(248, 235, 219, 0.88);
+}
+
+.room-topbar-actions {
+  display: flex;
+  gap: 16px;
+  color: #5e4732;
+}
+
+.room-frame {
+  border-radius: 34px;
+  padding: 20px;
+  background: rgba(255, 249, 241, 0.7);
+  backdrop-filter: blur(12px);
+}
+
+.room-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, #b4875f 0%, #926142 34%, #6d4832 100%);
+}
+
+.room-stage::before {
+  content: "";
+  position: absolute;
+  inset: 8% 6% 28%;
+  border-radius: 24px 24px 8px 8px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 239, 214, 0.22), transparent 38%),
+    linear-gradient(180deg, rgba(245, 228, 201, 0.26), rgba(84, 51, 34, 0.16));
+  border: 1px solid rgba(255, 247, 236, 0.18);
+}
+
+.room-stage::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 26%;
+  background:
+    linear-gradient(180deg, rgba(74, 47, 31, 0.24), rgba(49, 31, 20, 0.65)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(84, 56, 36, 0.86) 0,
+      rgba(84, 56, 36, 0.86) 72px,
+      rgba(69, 44, 28, 0.86) 72px,
+      rgba(69, 44, 28, 0.86) 84px
+    );
+}
+
+.room-object {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background: rgba(255, 250, 244, 0.12);
+  color: #fff3e6;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.room-object:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 0 30px rgba(255, 255, 255, 0.24);
+  background: rgba(255, 250, 244, 0.18);
+}
+
+.room-object strong,
+.room-object small {
+  position: relative;
+  z-index: 1;
+}
+
+.object-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #7fd36b;
+  box-shadow: 0 0 18px rgba(127, 211, 107, 0.8);
+  animation: pulseDot 1.8s ease-in-out infinite;
+}
+
+.object-clock {
+  left: 8%;
+  top: 14%;
+  min-width: 150px;
+}
+
+.object-vinyl {
+  left: 17%;
+  bottom: 17%;
+  min-width: 180px;
+}
+
+.object-radio {
+  right: 26%;
+  top: 18%;
+  min-width: 150px;
+}
+
+.object-calendar {
+  left: 42%;
+  top: 10%;
+  min-width: 160px;
+}
+
+.object-diary {
+  left: 40%;
+  bottom: 17%;
+  min-width: 150px;
+}
+
+.object-phone {
+  right: 10%;
+  bottom: 18%;
+  min-width: 190px;
+}
+
+.phone-silhouette {
+  width: 74px;
+  height: 126px;
+  padding: 8px;
+  border-radius: 20px;
+  background: rgba(16, 14, 13, 0.92);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.phone-silhouette span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #d7bb9f, #92633e);
+}
+
+.vinyl-disc {
+  width: 68px;
+  height: 68px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at center, #d4b08d 0 10px, #201915 10px 16px, #151210 16px 100%);
+  box-shadow: inset 0 0 0 10px rgba(255, 255, 255, 0.04);
+}
+
+.spinning {
+  animation: spinDisc 3.2s linear infinite;
+}
+
+.room-info {
+  position: absolute;
+  right: 3%;
+  top: 8%;
+  width: min(320px, 28%);
+  z-index: 2;
+}
+
+.room-info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border-radius: 24px;
+  background: rgba(255, 250, 244, 0.86);
+  color: #2d231a;
+}
+
+.room-info-card h3 {
+  font-size: 1.8rem;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: #ead6c0;
+  color: #5b432d;
+  cursor: pointer;
+}
+
+.chip.active {
+  background: #6d4123;
+  color: #f5e9dc;
+}
+
+.room-textarea {
+  min-height: 160px;
+}
+
+.phone-overlay {
+  position: absolute;
+  inset: 10% 16%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(25, 20, 18, 0.45);
+  backdrop-filter: blur(6px);
+  z-index: 4;
+  animation: overlayIn 220ms ease-out;
+}
+
+.phone-window {
+  width: min(540px, 100%);
+  height: min(640px, 100%);
+  display: flex;
+  flex-direction: column;
+  border-radius: 34px;
+  padding: 18px;
+  background:
+    linear-gradient(180deg, rgba(247, 240, 230, 0.98), rgba(242, 228, 208, 0.98));
+  animation: phoneIn 240ms ease-out;
+}
+
+.phone-window-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+}
+
+.phone-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 0 16px;
+}
+
+.phone-tab {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: #eadac7;
+  color: #5d4530;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.phone-tab.active {
+  background: #2d231a;
+  color: #f7ede0;
+}
+
+.phone-app-body {
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.phone-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panel-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.panel-heading.inline {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.panel-heading h3 {
+  font-size: 1.8rem;
+}
+
+.phone-card-list {
+  display: grid;
+  gap: 12px;
+}
+
+.phone-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(255, 252, 247, 0.86);
+  border: 1px solid rgba(98, 66, 39, 0.1);
+}
+
+.phone-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.phone-card h4 {
+  margin: 6px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  color: #2d231a;
+}
+
+.mono-label {
+  font-family: "Cascadia Code", Consolas, monospace;
+  color: #86654a;
+  font-size: 0.84rem;
+}
+
+.mini-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mini-meta div {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(233, 218, 201, 0.5);
+}
+
+.mini-meta dt {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #87684c;
+}
+
+.mini-meta dd {
+  margin: 6px 0 0;
+}
+
+.wallet-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.qr-placeholder {
+  aspect-ratio: 1;
+  border-radius: 24px;
+  background:
+    linear-gradient(90deg, rgba(44, 35, 26, 0.96) 0 12%, transparent 12% 20%, rgba(44, 35, 26, 0.96) 20% 32%, transparent 32% 40%, rgba(44, 35, 26, 0.96) 40% 52%, transparent 52% 60%, rgba(44, 35, 26, 0.96) 60% 72%, transparent 72% 80%, rgba(44, 35, 26, 0.96) 80% 100%),
+    linear-gradient(180deg, rgba(44, 35, 26, 0.96) 0 12%, transparent 12% 20%, rgba(44, 35, 26, 0.96) 20% 32%, transparent 32% 40%, rgba(44, 35, 26, 0.96) 40% 52%, transparent 52% 60%, rgba(44, 35, 26, 0.96) 60% 72%, transparent 72% 80%, rgba(44, 35, 26, 0.96) 80% 100%),
+    #f8efe4;
+  display: grid;
+  place-items: center;
+}
+
+.qr-placeholder span {
+  padding: 8px 10px;
+  background: rgba(248, 239, 228, 0.94);
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.settings-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.slider-field input {
+  padding: 0;
+}
+
+.countdown {
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 1.3rem;
+  color: #7e562b;
+}
+
+.plain-list {
+  margin: 0;
+  padding-left: 18px;
+  color: #5c4a39;
+}
+
+.plain-list.compact li + li {
+  margin-top: 4px;
+}
+
+.toolbar-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.grow-field {
+  grid-column: 1 / -1;
+}
+
+.history-mail-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(236, 225, 210, 0.5);
+}
+
+.history-mail-list {
+  margin: 0;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 104px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.status-scheduled {
+  background: rgba(236, 183, 89, 0.18);
+  color: #8e5d14;
+}
+
+.status-ready {
+  background: rgba(94, 180, 104, 0.18);
+  color: #2c7441;
+}
+
+.status-opened {
+  background: rgba(104, 117, 255, 0.14);
+  color: #4652b8;
+}
+
+.status-cancelled {
+  background: rgba(211, 94, 94, 0.16);
+  color: #8d2d2d;
+}
+
+.admin-shell {
+  min-height: 100vh;
+  padding: 32px 0;
+}
+
+.panel {
+  border-radius: 30px;
+  padding: 28px;
+  background: rgba(255, 250, 244, 0.84);
+}
+
+.panel h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.admin-heading {
+  margin-top: 20px;
+}
+
+.metric-card {
+  padding: 18px;
+  border-radius: 24px;
+  background: #fff7ef;
+}
+
+.metric-card span {
+  display: block;
+  color: #75563c;
+  font-size: 0.78rem;
+}
+
+.metric-card strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.8rem;
+  color: #2a2017;
+}
+
+.pagination-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 2px 0;
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes spinDisc {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes phoneIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes overlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1080px) {
+  .gate-shell,
+  .metric-grid,
+  .admin-grid,
+  .wallet-grid,
+  .toolbar-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gate-shell {
+    padding: 24px 0 36px;
+  }
+
+  .room-info {
+    width: min(360px, 42%);
+  }
+}
+
+@media (max-width: 920px) {
+  .room-topbar,
+  .panel-heading.inline,
+  .phone-card-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .room-frame {
+    padding: 12px;
+  }
+
+  .room-stage {
+    aspect-ratio: auto;
+    min-height: 900px;
+  }
+
+  .room-stage::before,
+  .room-stage::after {
+    display: none;
+  }
+
+  .room-object,
+  .room-info,
+  .phone-overlay {
+    position: static;
+    width: 100%;
+  }
+
+  .room-stage {
+    display: grid;
+    gap: 14px;
+    padding: 18px;
+    background: linear-gradient(180deg, #9c6f49 0%, #6d4832 100%);
+  }
+
+  .phone-overlay {
+    inset: auto;
+    background: rgba(25, 20, 18, 0.16);
+    padding: 0;
+  }
+
+  .phone-window {
+    width: 100%;
+    height: auto;
+  }
+
+  .mini-meta,
+  .metric-grid.admin,
+  .pagination-row {
+    grid-template-columns: 1fr;
+  }
+
+  .pagination-row {
+    display: grid;
+  }
+}
