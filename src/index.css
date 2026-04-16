@@ -550,12 +550,41 @@ select:focus-visible {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
 }
 
-.room-ledger {
-  position: absolute;
-  top: 8%;
-  left: 4%;
+.room-layout {
+  position: relative;
   z-index: 2;
-  width: min(34%, 420px);
+  display: grid;
+  height: 100%;
+  min-height: 0;
+  padding: 22px 22px 18px;
+  gap: 16px;
+  grid-template-columns:
+    minmax(150px, 1.1fr)
+    minmax(140px, 0.86fr)
+    minmax(90px, 0.5fr)
+    minmax(140px, 0.86fr)
+    minmax(160px, 1fr)
+    minmax(160px, 1fr);
+  grid-template-rows:
+    minmax(116px, 1fr)
+    minmax(110px, 0.94fr)
+    minmax(116px, 1fr)
+    minmax(142px, 1.06fr)
+    auto;
+  grid-template-areas:
+    "ledger ledger . calendar info info"
+    "clock . . calendar info info"
+    "vinyl vinyl . . radio radio"
+    "vinyl vinyl diary diary phone phone"
+    "status status status status status status";
+}
+
+.room-layout > * {
+  min-width: 0;
+}
+
+.room-ledger {
+  grid-area: ledger;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -611,11 +640,7 @@ select:focus-visible {
 }
 
 .room-status-strip {
-  position: absolute;
-  left: 6%;
-  right: 6%;
-  bottom: 4%;
-  z-index: 2;
+  grid-area: status;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -630,8 +655,7 @@ select:focus-visible {
 }
 
 .room-object {
-  position: absolute;
-  z-index: 2;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -702,39 +726,45 @@ select:focus-visible {
 }
 
 .object-clock {
-  left: 8%;
-  top: 44%;
-  min-width: 160px;
+  grid-area: clock;
+  justify-self: start;
+  align-self: end;
+  width: min(100%, 180px);
 }
 
 .object-vinyl {
-  left: 22%;
-  bottom: 17%;
-  min-width: 186px;
+  grid-area: vinyl;
+  justify-self: start;
+  align-self: end;
+  width: min(100%, 236px);
 }
 
 .object-radio {
-  right: 27%;
-  top: 42%;
-  min-width: 150px;
+  grid-area: radio;
+  justify-self: end;
+  align-self: center;
+  width: min(100%, 188px);
 }
 
 .object-calendar {
-  left: 45%;
-  top: 20%;
-  min-width: 160px;
+  grid-area: calendar;
+  justify-self: center;
+  align-self: start;
+  width: min(100%, 188px);
 }
 
 .object-diary {
-  left: 46%;
-  bottom: 18%;
-  min-width: 150px;
+  grid-area: diary;
+  justify-self: center;
+  align-self: center;
+  width: min(100%, 210px);
 }
 
 .object-phone {
-  right: 10%;
-  bottom: 16%;
-  min-width: 204px;
+  grid-area: phone;
+  justify-self: end;
+  align-self: end;
+  width: min(100%, 220px);
 }
 
 .phone-silhouette {
@@ -768,17 +798,15 @@ select:focus-visible {
 }
 
 .room-info {
-  position: absolute;
-  right: 3%;
-  top: 10%;
-  width: min(320px, 28%);
-  z-index: 3;
+  grid-area: info;
+  align-self: start;
 }
 
 .room-info-card {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-height: 100%;
   padding: 22px;
   border-radius: var(--radius-card);
   background:
@@ -1263,12 +1291,44 @@ select:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  .room-layout {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows:
+      auto
+      auto
+      auto
+      auto
+      auto;
+    grid-template-areas:
+      "ledger ledger info info"
+      "calendar clock info info"
+      "vinyl vinyl radio radio"
+      "diary diary phone phone"
+      "status status status status";
+  }
+
   .gate-shell {
     padding: 24px 0 36px;
   }
 
   .room-info {
-    width: min(360px, 42%);
+    width: 100%;
+  }
+
+  .room-object {
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .object-clock,
+  .object-vinyl,
+  .object-radio,
+  .object-calendar,
+  .object-diary,
+  .object-phone {
+    justify-self: stretch;
+    align-self: stretch;
+    width: 100%;
   }
 
   .room-status-strip {
@@ -1299,7 +1359,8 @@ select:focus-visible {
   .room-info,
   .phone-overlay,
   .room-ledger,
-  .room-status-strip {
+  .room-status-strip,
+  .room-layout {
     position: static;
     width: 100%;
   }
@@ -1320,6 +1381,14 @@ select:focus-visible {
   .room-ledger,
   .room-status-strip {
     order: -1;
+  }
+
+  .room-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas: none;
+    grid-template-rows: none;
+    height: auto;
+    padding: 0;
   }
 
   .room-ledger-meta,

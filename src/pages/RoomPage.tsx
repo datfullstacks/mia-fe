@@ -229,183 +229,185 @@ export function RoomPage() {
             <div className="room-rug" />
           </div>
 
-          <section className="room-ledger">
-            <p className="panel-tag">Tonight in MIA</p>
-            <h2>{stageTitle}</h2>
-            <p>{roomPrompt}</p>
-            <div className="room-ledger-meta">
-              <div>
-                <span>Focus</span>
-                <strong>{activeFocusLabel}</strong>
-              </div>
-              <div>
-                <span>Access</span>
-                <strong>{currentUser ? `${availablePhoneApps.length} phone apps` : 'Guest unlock only'}</strong>
-              </div>
-              <div>
-                <span>Date</span>
-                <strong>{longDate}</strong>
-              </div>
-            </div>
-          </section>
-
-          <div className="room-status-strip">
-            <span>{formatClock(clock)}</span>
-            <span>{currentUser ? 'Signed room access' : 'Guest room access'}</span>
-            <span>{activeObject ? `Focus: ${roomObjectLabels[activeObject]}` : activeQuote}</span>
-          </div>
-
-          <button
-            className="room-object object-clock"
-            onClick={() => setActiveObject('clock')}
-            type="button"
-          >
-            <span className="object-dot" />
-            <span className="room-object-badge">{roomObjectBadges.clock}</span>
-            <strong>Clock</strong>
-            <small>{formatClock(clock)}</small>
-          </button>
-
-          <button
-            className="room-object object-vinyl"
-            onClick={() => setActiveObject('vinyl')}
-            type="button"
-          >
-            <span className="object-dot" />
-            <span className="room-object-badge">{roomObjectBadges.vinyl}</span>
-            <div className={vinylPlaying ? 'vinyl-disc spinning' : 'vinyl-disc'} />
-            <strong>Vinyl Player</strong>
-          </button>
-
-          <button
-            className="room-object object-radio"
-            onClick={() => setActiveObject('radio')}
-            type="button"
-          >
-            <span className="object-dot" />
-            <span className="room-object-badge">{roomObjectBadges.radio}</span>
-            <strong>Radio</strong>
-            <small>{selectedRadio}</small>
-          </button>
-
-          <button
-            className="room-object object-calendar"
-            onClick={() => setActiveObject('calendar')}
-            type="button"
-          >
-            <span className="object-dot" />
-            <span className="room-object-badge">{roomObjectBadges.calendar}</span>
-            <strong>Calendar</strong>
-            <small>{clock.toLocaleDateString()}</small>
-          </button>
-
-          <button
-            className="room-object object-diary"
-            onClick={() => setActiveObject('diary')}
-            type="button"
-          >
-            <span className="object-dot" />
-            <span className="room-object-badge">{roomObjectBadges.diary}</span>
-            <strong>Diary</strong>
-            <small>{diaryNote ? 'Saved locally' : 'Write a note'}</small>
-          </button>
-
-          <button
-            className="room-object object-phone"
-            onClick={() => openPhone(currentUser ? 'seal' : 'unseal')}
-            type="button"
-          >
-            <span className="object-dot" />
-            <span className="room-object-badge">OS</span>
-            <div className="phone-silhouette">
-              <span />
-            </div>
-            <strong>Smartphone OS</strong>
-            <small>{currentUser ? 'Seal, history, pricing' : 'Guest unlock'}</small>
-          </button>
-
-          <aside className="room-info">
-            {!activeObject ? (
-              <div className="room-info-card">
-                <p className="panel-tag">Room reading</p>
-                <h3>{currentUser ? 'Hover the room, then enter the phone' : 'Guest-safe ambient mode'}</h3>
-                <p>
-                  {currentUser
-                    ? 'Every hotspot now behaves like a live accent around the real product shell. The room is atmosphere; the phone is action.'
-                    : 'You can explore the room, read the ambience, and open the phone into Unseal. Sign in at the gate to unlock the rest of the apps.'}
-                </p>
-              </div>
-            ) : null}
-
-            {activeObject === 'clock' ? (
-              <div className="room-info-card">
-                <p className="panel-tag">Clock</p>
-                <h3>{formatClock(clock)}</h3>
-                <p>The room clock is live, and the lighting shifts with it. MIA should always feel aware of time, not static.</p>
-              </div>
-            ) : null}
-
-            {activeObject === 'vinyl' ? (
-              <div className="room-info-card">
-                <p className="panel-tag">Vinyl player</p>
-                <h3>Lo-fi track list</h3>
-                <ul className="plain-list compact">
-                  {vinylTracks.map((track) => (
-                    <li key={track}>{track}</li>
-                  ))}
-                </ul>
-                <button
-                  className="phone-button ghost"
-                  onClick={() => setVinylPlaying((current) => !current)}
-                  type="button"
-                >
-                  {vinylPlaying ? 'Pause ambience' : 'Spin ambience'}
-                </button>
-              </div>
-            ) : null}
-
-            {activeObject === 'radio' ? (
-              <div className="room-info-card">
-                <p className="panel-tag">Radio</p>
-                <h3>Ambient channels</h3>
-                <p>These are still UI-only channels, but the room treats them as a tone switch for the scene.</p>
-                <div className="button-row">
-                  {radioStations.map((station) => (
-                    <button
-                      key={station}
-                      className={selectedRadio === station ? 'chip active' : 'chip'}
-                      onClick={() => setSelectedRadio(station)}
-                      type="button"
-                    >
-                      {station}
-                    </button>
-                  ))}
+          <div className="room-layout">
+            <section className="room-ledger">
+              <p className="panel-tag">Tonight in MIA</p>
+              <h2>{stageTitle}</h2>
+              <p>{roomPrompt}</p>
+              <div className="room-ledger-meta">
+                <div>
+                  <span>Focus</span>
+                  <strong>{activeFocusLabel}</strong>
+                </div>
+                <div>
+                  <span>Access</span>
+                  <strong>{currentUser ? `${availablePhoneApps.length} phone apps` : 'Guest unlock only'}</strong>
+                </div>
+                <div>
+                  <span>Date</span>
+                  <strong>{longDate}</strong>
                 </div>
               </div>
-            ) : null}
+            </section>
 
-            {activeObject === 'calendar' ? (
-              <div className="room-info-card">
-                <p className="panel-tag">Calendar</p>
-                <h3>{longDate}</h3>
-                <p>{quotes[clock.getDate() % quotes.length]}</p>
-              </div>
-            ) : null}
+            <button
+              className="room-object object-clock"
+              onClick={() => setActiveObject('clock')}
+              type="button"
+            >
+              <span className="object-dot" />
+              <span className="room-object-badge">{roomObjectBadges.clock}</span>
+              <strong>Clock</strong>
+              <small>{formatClock(clock)}</small>
+            </button>
 
-            {activeObject === 'diary' ? (
-              <div className="room-info-card">
-                <p className="panel-tag">Diary</p>
-                <h3>Quick note</h3>
-                <p>Local room note only. It is there to make the room feel inhabited, not to replace amber creation.</p>
-                <textarea
-                  className="room-textarea"
-                  placeholder="Write a short room note..."
-                  value={diaryNote}
-                  onChange={(event) => setDiaryNote(event.target.value)}
-                />
+            <button
+              className="room-object object-vinyl"
+              onClick={() => setActiveObject('vinyl')}
+              type="button"
+            >
+              <span className="object-dot" />
+              <span className="room-object-badge">{roomObjectBadges.vinyl}</span>
+              <div className={vinylPlaying ? 'vinyl-disc spinning' : 'vinyl-disc'} />
+              <strong>Vinyl Player</strong>
+            </button>
+
+            <button
+              className="room-object object-radio"
+              onClick={() => setActiveObject('radio')}
+              type="button"
+            >
+              <span className="object-dot" />
+              <span className="room-object-badge">{roomObjectBadges.radio}</span>
+              <strong>Radio</strong>
+              <small>{selectedRadio}</small>
+            </button>
+
+            <button
+              className="room-object object-calendar"
+              onClick={() => setActiveObject('calendar')}
+              type="button"
+            >
+              <span className="object-dot" />
+              <span className="room-object-badge">{roomObjectBadges.calendar}</span>
+              <strong>Calendar</strong>
+              <small>{clock.toLocaleDateString()}</small>
+            </button>
+
+            <button
+              className="room-object object-diary"
+              onClick={() => setActiveObject('diary')}
+              type="button"
+            >
+              <span className="object-dot" />
+              <span className="room-object-badge">{roomObjectBadges.diary}</span>
+              <strong>Diary</strong>
+              <small>{diaryNote ? 'Saved locally' : 'Write a note'}</small>
+            </button>
+
+            <button
+              className="room-object object-phone"
+              onClick={() => openPhone(currentUser ? 'seal' : 'unseal')}
+              type="button"
+            >
+              <span className="object-dot" />
+              <span className="room-object-badge">OS</span>
+              <div className="phone-silhouette">
+                <span />
               </div>
-            ) : null}
-          </aside>
+              <strong>Smartphone OS</strong>
+              <small>{currentUser ? 'Seal, history, pricing' : 'Guest unlock'}</small>
+            </button>
+
+            <aside className="room-info">
+              {!activeObject ? (
+                <div className="room-info-card">
+                  <p className="panel-tag">Room reading</p>
+                  <h3>{currentUser ? 'Hover the room, then enter the phone' : 'Guest-safe ambient mode'}</h3>
+                  <p>
+                    {currentUser
+                      ? 'Every hotspot now behaves like a live accent around the real product shell. The room is atmosphere; the phone is action.'
+                      : 'You can explore the room, read the ambience, and open the phone into Unseal. Sign in at the gate to unlock the rest of the apps.'}
+                  </p>
+                </div>
+              ) : null}
+
+              {activeObject === 'clock' ? (
+                <div className="room-info-card">
+                  <p className="panel-tag">Clock</p>
+                  <h3>{formatClock(clock)}</h3>
+                  <p>The room clock is live, and the lighting shifts with it. MIA should always feel aware of time, not static.</p>
+                </div>
+              ) : null}
+
+              {activeObject === 'vinyl' ? (
+                <div className="room-info-card">
+                  <p className="panel-tag">Vinyl player</p>
+                  <h3>Lo-fi track list</h3>
+                  <ul className="plain-list compact">
+                    {vinylTracks.map((track) => (
+                      <li key={track}>{track}</li>
+                    ))}
+                  </ul>
+                  <button
+                    className="phone-button ghost"
+                    onClick={() => setVinylPlaying((current) => !current)}
+                    type="button"
+                  >
+                    {vinylPlaying ? 'Pause ambience' : 'Spin ambience'}
+                  </button>
+                </div>
+              ) : null}
+
+              {activeObject === 'radio' ? (
+                <div className="room-info-card">
+                  <p className="panel-tag">Radio</p>
+                  <h3>Ambient channels</h3>
+                  <p>These are still UI-only channels, but the room treats them as a tone switch for the scene.</p>
+                  <div className="button-row">
+                    {radioStations.map((station) => (
+                      <button
+                        key={station}
+                        className={selectedRadio === station ? 'chip active' : 'chip'}
+                        onClick={() => setSelectedRadio(station)}
+                        type="button"
+                      >
+                        {station}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              {activeObject === 'calendar' ? (
+                <div className="room-info-card">
+                  <p className="panel-tag">Calendar</p>
+                  <h3>{longDate}</h3>
+                  <p>{quotes[clock.getDate() % quotes.length]}</p>
+                </div>
+              ) : null}
+
+              {activeObject === 'diary' ? (
+                <div className="room-info-card">
+                  <p className="panel-tag">Diary</p>
+                  <h3>Quick note</h3>
+                  <p>Local room note only. It is there to make the room feel inhabited, not to replace amber creation.</p>
+                  <textarea
+                    className="room-textarea"
+                    placeholder="Write a short room note..."
+                    value={diaryNote}
+                    onChange={(event) => setDiaryNote(event.target.value)}
+                  />
+                </div>
+              ) : null}
+            </aside>
+
+            <div className="room-status-strip">
+              <span>{formatClock(clock)}</span>
+              <span>{currentUser ? 'Signed room access' : 'Guest room access'}</span>
+              <span>{activeObject ? `Focus: ${roomObjectLabels[activeObject]}` : activeQuote}</span>
+            </div>
+          </div>
 
           {isPhoneOpen ? (
             <div className="phone-overlay">
