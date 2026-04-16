@@ -291,7 +291,7 @@ select:focus-visible {
   max-width: none;
   min-height: 100vh;
   margin: 0;
-  padding: 16px;
+  padding: 0;
 }
 
 .room-topbar-actions {
@@ -363,14 +363,14 @@ select:focus-visible {
 .room-frame {
   display: flex;
   flex-direction: column;
-  border-radius: 38px;
-  padding: 24px;
-  min-height: calc(100vh - 32px);
+  border-radius: 0;
+  padding: 20px 24px 24px;
+  min-height: 100vh;
   background:
     radial-gradient(circle at top right, rgba(255, 214, 170, 0.52), transparent 28%),
     linear-gradient(180deg, rgba(255, 248, 240, 0.94), rgba(246, 232, 213, 0.92));
-  border: 1px solid rgba(158, 118, 78, 0.14);
-  box-shadow: 0 28px 70px rgba(82, 58, 34, 0.12);
+  border: none;
+  box-shadow: none;
 }
 
 .room-stage {
@@ -378,9 +378,9 @@ select:focus-visible {
   flex: 1 1 auto;
   min-height: 760px;
   overflow: hidden;
-  border-radius: 30px;
+  border-radius: 0;
   isolation: isolate;
-  border: 1px solid rgba(167, 128, 88, 0.12);
+  border: none;
   background:
     radial-gradient(circle at top, rgba(255, 230, 194, 0.72), transparent 28%),
     linear-gradient(180deg, #efd8b9 0%, #dfc09f 22%, #ceb091 64%, #c39a74 100%);
@@ -1374,8 +1374,8 @@ select:focus-visible {
   }
 
   .room-frame {
-    min-height: calc(100vh - 24px);
-    padding: 12px;
+    min-height: 100vh;
+    padding: 12px 12px 16px;
   }
 
   .room-stage {
