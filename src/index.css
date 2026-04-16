@@ -594,7 +594,7 @@ select {
   margin: 6px 0 0;
 }
 
-.wallet-grid {
+.pricing-grid {
   display: grid;
   grid-template-columns: 180px 1fr;
   gap: 16px;
@@ -847,7 +847,7 @@ select {
   .gate-shell,
   .metric-grid,
   .admin-grid,
-  .wallet-grid,
+  .pricing-grid,
   .toolbar-grid {
     grid-template-columns: 1fr;
   }

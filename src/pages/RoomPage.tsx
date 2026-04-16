@@ -1,23 +1,23 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { HistoryPanel } from '../components/HistoryPanel'
+import { PricingPanel } from '../components/PricingPanel'
 import { SealPanel } from '../components/SealPanel'
 import { SettingsPanel } from '../components/SettingsPanel'
 import { UnsealPanel } from '../components/UnsealPanel'
-import { WalletPanel } from '../components/WalletPanel'
 import { useAuth } from '../lib/auth'
 import { formatClock } from '../lib/time'
 
 type RoomObject = 'clock' | 'vinyl' | 'radio' | 'calendar' | 'diary'
-type PhoneApp = 'seal' | 'unseal' | 'history' | 'wallet' | 'settings'
+type PhoneApp = 'seal' | 'unseal' | 'history' | 'pricing' | 'settings'
 
-const phoneApps: PhoneApp[] = ['seal', 'unseal', 'history', 'wallet', 'settings']
+const phoneApps: PhoneApp[] = ['seal', 'unseal', 'history', 'pricing', 'settings']
 const guestPhoneApps: PhoneApp[] = ['unseal', 'settings']
 const phoneAppLabels: Record<PhoneApp, string> = {
   seal: 'Seal',
   unseal: 'Unseal',
   history: 'History',
-  wallet: 'Wallet',
+  pricing: 'Pricing',
   settings: 'Settings',
 }
 
@@ -40,11 +40,12 @@ const quotes = [
 
 function getInitialPhoneState(searchParams: URLSearchParams) {
   const requestedApp = searchParams.get('app')
+  const normalizedApp = requestedApp === 'wallet' ? 'pricing' : requestedApp
 
-  if (requestedApp && phoneApps.includes(requestedApp as PhoneApp)) {
+  if (normalizedApp && phoneApps.includes(normalizedApp as PhoneApp)) {
     return {
       isOpen: true,
-      app: requestedApp as PhoneApp,
+      app: normalizedApp as PhoneApp,
     }
   }
 
@@ -97,8 +98,8 @@ export function RoomPage() {
         return <UnsealPanel />
       case 'history':
         return <HistoryPanel />
-      case 'wallet':
-        return <WalletPanel />
+      case 'pricing':
+        return <PricingPanel />
       case 'settings':
         return <SettingsPanel />
       default:
@@ -199,7 +200,7 @@ export function RoomPage() {
                 <h3>{currentUser ? 'Select an object' : 'Guest room access'}</h3>
                 <p>
                   {currentUser
-                    ? 'The room now mirrors the doc structure: object hotspots outside, phone apps inside, and real Express-backed flows for seal, unseal, payments, and admin.'
+                    ? 'The room now mirrors the doc structure: object hotspots outside, phone apps inside, and real Express-backed flows for seal, unseal, pricing, and admin.'
                     : 'You can explore the room visuals, but the phone will open directly into Unseal until you sign in at the gate.'}
                 </p>
               </div>

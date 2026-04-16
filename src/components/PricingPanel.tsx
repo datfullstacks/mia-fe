@@ -28,7 +28,7 @@ function formatCountdown(expiresAt: string | null, now: number) {
   return `Expires in ${minutes}:${seconds.toString().padStart(2, '0')}`
 }
 
-export function WalletPanel() {
+export function PricingPanel() {
   const { currentUser, token, refreshSession } = useAuth()
   const [payments, setPayments] = useState<Payment[]>([])
   const [activePaymentId, setActivePaymentId] = useState<string | null>(null)
@@ -161,11 +161,11 @@ export function WalletPanel() {
   return (
     <div className="phone-panel">
       <div className="panel-heading">
-        <p className="panel-tag">Wallet</p>
-        <h3>SePay QR checkout</h3>
+        <p className="panel-tag">Pricing</p>
+        <h3>Upgrade to Pro</h3>
       </div>
 
-      <div className="wallet-grid">
+      <div className="pricing-grid">
         <div className="qr-frame" aria-hidden={activePayment?.qrUrl ? undefined : true}>
           {activePayment?.qrUrl ? (
             <img alt={`QR for ${activePayment.paymentRef}`} className="qr-image" src={activePayment.qrUrl} />
@@ -175,10 +175,11 @@ export function WalletPanel() {
             </div>
           )}
         </div>
-        <div className="wallet-copy">
+        <div className="pricing-copy">
           <p>
-            Generate a dedicated SePay QR, keep the transfer description unchanged, and the backend
-            will activate Pro automatically when the webhook matches the payment ref and amount.
+            Pick the Pro upgrade, scan the dedicated SePay QR, and keep the transfer description
+            unchanged. MIA will activate Pro automatically when the webhook matches the payment ref
+            and amount.
           </p>
           <ul className="plain-list compact">
             <li>Current tier: {currentUser ? currentUser.tier : 'guest'}</li>
@@ -210,7 +211,7 @@ export function WalletPanel() {
       {result ? <p className="feedback success">{result}</p> : null}
 
       {activePayment ? (
-        <article className="phone-card wallet-active-card">
+        <article className="phone-card pricing-active-card">
           <div className="phone-card-head">
             <div>
               <span className="mono-label">{activePayment.paymentRef}</span>
