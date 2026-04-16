@@ -10,6 +10,18 @@ function formatVnd(amount: number) {
   return amount.toLocaleString('vi-VN') + ' VND'
 }
 
+function getPaidLabel(payment: Payment) {
+  if (payment.paidAt) {
+    return formatDateTime(payment.paidAt)
+  }
+
+  if (payment.status === 'paid') {
+    return 'Confirmed'
+  }
+
+  return 'Waiting'
+}
+
 function formatCountdown(expiresAt: string | null, now: number) {
   if (!expiresAt) {
     return null
@@ -242,9 +254,13 @@ export function PricingPanel() {
           </p>
           {countdown ? <p className="countdown">{countdown}</p> : null}
           {activePayment.status === 'pending_review' ? (
-            <p className="feedback error">
-              A transfer was detected but it did not match cleanly. Admin review is required.
-            </p>
+            <div className="feedback error">
+              <p>A transfer was detected but it did not match cleanly.</p>
+              {activePayment.statusDetail ? <p>{activePayment.statusDetail}</p> : null}
+              {activePayment.lastTransferAt ? (
+                <p>Latest transfer: {formatDateTime(activePayment.lastTransferAt)}</p>
+              ) : null}
+            </div>
           ) : null}
           {activePayment.status === 'paid' ? (
             <p className="feedback success">Payment confirmed by SePay. Pro is now active.</p>
@@ -277,13 +293,20 @@ export function PricingPanel() {
               </div>
               <div>
                 <dt>Paid</dt>
-                <dd>{payment.paidAt ? formatDateTime(payment.paidAt) : 'Waiting'}</dd>
+                <dd>{getPaidLabel(payment)}</dd>
               </div>
               <div>
                 <dt>Provider Tx</dt>
                 <dd>{payment.providerTransactionId || 'Pending webhook'}</dd>
               </div>
+              {payment.lastTransferAmount ? (
+                <div>
+                  <dt>Received</dt>
+                  <dd>{formatVnd(payment.lastTransferAmount)}</dd>
+                </div>
+              ) : null}
             </dl>
+            {payment.statusDetail ? <p className="feedback error">{payment.statusDetail}</p> : null}
             <div className="button-row">
               <button
                 className="phone-button ghost"

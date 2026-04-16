@@ -17,6 +17,22 @@ import { formatDateTime } from '../lib/time'
 
 const ADMIN_PAGE_SIZE = 5
 
+function formatVnd(amount: number) {
+  return amount.toLocaleString('vi-VN') + ' VND'
+}
+
+function getPaidLabel(payment: Payment) {
+  if (payment.paidAt) {
+    return formatDateTime(payment.paidAt)
+  }
+
+  if (payment.status === 'paid') {
+    return 'Confirmed'
+  }
+
+  return 'Waiting'
+}
+
 export function AdminPage() {
   const { currentUser, isLoading, token } = useAuth()
   const [overview, setOverview] = useState<AdminOverviewResponse | null>(null)
@@ -498,13 +514,22 @@ export function AdminPage() {
                       </div>
                       <div>
                         <dt>Paid</dt>
-                        <dd>{payment.paidAt ? formatDateTime(payment.paidAt) : 'Waiting'}</dd>
+                        <dd>{getPaidLabel(payment)}</dd>
                       </div>
                       <div>
                         <dt>Provider Tx</dt>
                         <dd>{payment.providerTransactionId || 'Pending webhook'}</dd>
                       </div>
+                      {payment.lastTransferAmount ? (
+                        <div>
+                          <dt>Received</dt>
+                          <dd>{formatVnd(payment.lastTransferAmount)}</dd>
+                        </div>
+                      ) : null}
                     </dl>
+                    {payment.statusDetail ? (
+                      <p className="feedback error">{payment.statusDetail}</p>
+                    ) : null}
                     {payment.reviewedAt ? (
                       <p className="helper-copy">Reviewed {formatDateTime(payment.reviewedAt)}</p>
                     ) : null}

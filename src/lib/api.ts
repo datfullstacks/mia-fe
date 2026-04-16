@@ -50,6 +50,9 @@ export interface Payment {
   reviewedBy: string | null
   provider: 'sepay_qr'
   providerTransactionId: string | null
+  lastTransferAmount: number | null
+  lastTransferAt: string | null
+  statusDetail: string | null
   bankName: string
   accountNumber: string
   accountName: string
