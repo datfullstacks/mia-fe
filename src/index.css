@@ -323,9 +323,9 @@ select:focus-visible {
   min-height: 34px;
   padding: 0 14px;
   border-radius: var(--radius-pill);
-  background: rgba(255, 239, 219, 0.12);
-  border: 1px solid rgba(255, 239, 219, 0.14);
-  color: #f5e7d4;
+  background: rgba(255, 249, 239, 0.82);
+  border: 1px solid rgba(171, 125, 80, 0.16);
+  color: #8a5a31;
   font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -333,7 +333,7 @@ select:focus-visible {
 }
 
 .workspace-copy {
-  color: rgba(245, 231, 212, 0.78);
+  color: rgba(104, 76, 52, 0.8);
   font-size: 0.92rem;
   font-weight: 600;
 }
@@ -345,9 +345,9 @@ select:focus-visible {
   min-height: 44px;
   padding: 0 18px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(255, 231, 204, 0.18);
-  background: rgba(255, 241, 223, 0.08);
-  color: #f5e7d4;
+  border: 1px solid rgba(171, 125, 80, 0.16);
+  background: rgba(255, 249, 239, 0.8);
+  color: #6f4628;
   transition:
     transform var(--ease-standard),
     background var(--ease-standard),
@@ -356,8 +356,8 @@ select:focus-visible {
 
 .room-nav-link:hover {
   transform: translateY(-1px);
-  background: rgba(255, 241, 223, 0.14);
-  border-color: rgba(255, 231, 204, 0.28);
+  background: rgba(255, 252, 248, 0.96);
+  border-color: rgba(171, 125, 80, 0.24);
 }
 
 .room-frame {
@@ -367,9 +367,10 @@ select:focus-visible {
   padding: 24px;
   min-height: calc(100vh - 32px);
   background:
-    radial-gradient(circle at top right, rgba(255, 209, 160, 0.2), transparent 26%),
-    linear-gradient(180deg, rgba(58, 37, 25, 0.84), rgba(30, 18, 12, 0.72));
-  box-shadow: var(--shadow-room);
+    radial-gradient(circle at top right, rgba(255, 214, 170, 0.52), transparent 28%),
+    linear-gradient(180deg, rgba(255, 248, 240, 0.94), rgba(246, 232, 213, 0.92));
+  border: 1px solid rgba(158, 118, 78, 0.14);
+  box-shadow: 0 28px 70px rgba(82, 58, 34, 0.12);
 }
 
 .room-stage {
@@ -379,9 +380,10 @@ select:focus-visible {
   overflow: hidden;
   border-radius: 30px;
   isolation: isolate;
+  border: 1px solid rgba(167, 128, 88, 0.12);
   background:
-    radial-gradient(circle at top, rgba(255, 206, 150, 0.18), transparent 24%),
-    linear-gradient(180deg, #6c3f2f 0%, #4e2d24 22%, #2f1a19 68%, #1d1213 100%);
+    radial-gradient(circle at top, rgba(255, 230, 194, 0.72), transparent 28%),
+    linear-gradient(180deg, #efd8b9 0%, #dfc09f 22%, #ceb091 64%, #c39a74 100%);
 }
 
 .room-stage::before {
@@ -389,15 +391,15 @@ select:focus-visible {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0, transparent 14%, transparent 86%, rgba(255, 255, 255, 0.02) 100%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0, transparent 14%, transparent 86%, rgba(255, 255, 255, 0.08) 100%),
     repeating-linear-gradient(
       90deg,
-      rgba(255, 224, 188, 0.025) 0,
-      rgba(255, 224, 188, 0.025) 42px,
+      rgba(255, 231, 204, 0.08) 0,
+      rgba(255, 231, 204, 0.08) 42px,
       rgba(0, 0, 0, 0) 42px,
       rgba(0, 0, 0, 0) 86px
     );
-  opacity: 0.9;
+  opacity: 0.72;
 }
 
 .room-stage::after {
@@ -406,38 +408,38 @@ select:focus-visible {
   inset: auto 0 0;
   height: 31%;
   background:
-    linear-gradient(180deg, rgba(29, 18, 19, 0), rgba(15, 10, 12, 0.76)),
+    linear-gradient(180deg, rgba(153, 114, 76, 0), rgba(123, 86, 56, 0.22)),
     repeating-linear-gradient(
       90deg,
-      rgba(74, 47, 33, 0.92) 0,
-      rgba(74, 47, 33, 0.92) 88px,
-      rgba(52, 33, 24, 0.92) 88px,
-      rgba(52, 33, 24, 0.92) 100px
+      rgba(181, 139, 98, 0.72) 0,
+      rgba(181, 139, 98, 0.72) 88px,
+      rgba(157, 117, 80, 0.72) 88px,
+      rgba(157, 117, 80, 0.72) 100px
     );
 }
 
 .stage-midnight {
   background:
-    radial-gradient(circle at top, rgba(153, 188, 255, 0.14), transparent 24%),
-    linear-gradient(180deg, #3a334f 0%, #312334 20%, #241725 60%, #191117 100%);
+    radial-gradient(circle at top, rgba(211, 221, 255, 0.62), transparent 26%),
+    linear-gradient(180deg, #e9d9d2 0%, #d9c2c3 22%, #cdb5b6 70%, #c39f90 100%);
 }
 
 .stage-morning {
   background:
-    radial-gradient(circle at top, rgba(255, 232, 190, 0.28), transparent 28%),
-    linear-gradient(180deg, #9f6e4f 0%, #744a39 24%, #4a2e27 72%, #251716 100%);
+    radial-gradient(circle at top, rgba(255, 244, 214, 0.78), transparent 30%),
+    linear-gradient(180deg, #f4dfbe 0%, #e8cbab 24%, #d7b596 72%, #c79872 100%);
 }
 
 .stage-afternoon {
   background:
-    radial-gradient(circle at top right, rgba(255, 194, 128, 0.32), transparent 30%),
-    linear-gradient(180deg, #8e573d 0%, #6a3d2f 24%, #412723 70%, #231516 100%);
+    radial-gradient(circle at top right, rgba(255, 216, 159, 0.7), transparent 30%),
+    linear-gradient(180deg, #efd0ac 0%, #ddb88d 24%, #cca27c 70%, #bf8f66 100%);
 }
 
 .stage-night {
   background:
-    radial-gradient(circle at top right, rgba(255, 178, 111, 0.2), transparent 24%),
-    linear-gradient(180deg, #573228 0%, #3d221f 24%, #29181a 70%, #181012 100%);
+    radial-gradient(circle at top right, rgba(255, 214, 162, 0.58), transparent 26%),
+    linear-gradient(180deg, #ebd3bf 0%, #dbb79d 24%, #c89d86 70%, #b98972 100%);
 }
 
 .room-atmosphere {
@@ -458,7 +460,7 @@ select:focus-visible {
   left: 6%;
   width: 28%;
   height: 26%;
-  background: radial-gradient(circle, rgba(255, 203, 130, 0.42), transparent 68%);
+  background: radial-gradient(circle, rgba(255, 214, 160, 0.54), transparent 68%);
 }
 
 .room-glow-secondary {
@@ -466,7 +468,7 @@ select:focus-visible {
   top: 12%;
   width: 22%;
   height: 22%;
-  background: radial-gradient(circle, rgba(119, 164, 255, 0.24), transparent 68%);
+  background: radial-gradient(circle, rgba(255, 246, 220, 0.34), transparent 68%);
 }
 
 .room-window {
@@ -477,12 +479,12 @@ select:focus-visible {
   height: 31%;
   border-radius: 22px 22px 14px 14px;
   overflow: hidden;
-  border: 1px solid rgba(255, 234, 210, 0.24);
+  border: 1px solid rgba(255, 236, 214, 0.52);
   background:
-    linear-gradient(180deg, rgba(255, 237, 211, 0.66), rgba(255, 180, 116, 0.2) 44%, rgba(34, 31, 45, 0.32) 100%);
+    linear-gradient(180deg, rgba(255, 251, 241, 0.96), rgba(255, 224, 191, 0.66) 44%, rgba(228, 205, 193, 0.54) 100%);
   box-shadow:
-    0 0 40px rgba(255, 207, 151, 0.16),
-    inset 0 0 28px rgba(255, 255, 255, 0.08);
+    0 0 40px rgba(255, 207, 151, 0.18),
+    inset 0 0 28px rgba(255, 255, 255, 0.26);
 }
 
 .room-window::after {
@@ -517,8 +519,8 @@ select:focus-visible {
   width: 18%;
   height: 4%;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(119, 74, 53, 0.92), rgba(70, 40, 30, 0.92));
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+  background: linear-gradient(180deg, rgba(174, 132, 96, 0.88), rgba(133, 92, 61, 0.88));
+  box-shadow: 0 14px 30px rgba(111, 75, 46, 0.18);
 }
 
 .shelf-book,
@@ -565,9 +567,9 @@ select:focus-visible {
   height: 23%;
   border-radius: 50% 50% 18% 18%;
   background:
-    radial-gradient(circle at center, rgba(255, 201, 145, 0.18), transparent 58%),
-    linear-gradient(180deg, rgba(96, 40, 44, 0.9), rgba(69, 24, 30, 0.94));
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+    radial-gradient(circle at center, rgba(255, 239, 216, 0.22), transparent 58%),
+    linear-gradient(180deg, rgba(196, 136, 112, 0.84), rgba(171, 111, 95, 0.88));
+  box-shadow: 0 18px 40px rgba(137, 96, 68, 0.16);
 }
 
 .room-layout {
@@ -610,26 +612,26 @@ select:focus-visible {
   gap: 12px;
   padding: 22px 24px;
   border-radius: 28px;
-  border: 1px solid rgba(255, 228, 203, 0.12);
+  border: 1px solid rgba(174, 132, 96, 0.14);
   background:
-    linear-gradient(160deg, rgba(45, 25, 22, 0.92), rgba(72, 39, 28, 0.8));
-  box-shadow: 0 18px 40px rgba(17, 10, 9, 0.24);
-  color: #f5e7d5;
+    linear-gradient(160deg, rgba(255, 249, 241, 0.94), rgba(243, 228, 208, 0.92));
+  box-shadow: 0 18px 40px rgba(130, 92, 58, 0.12);
+  color: #5b3f29;
 }
 
 .room-ledger .panel-tag {
-  color: #e5ae75;
+  color: #a06636;
 }
 
 .room-ledger h2 {
   margin: 0;
   font-size: clamp(2rem, 3vw, 3rem);
-  color: #fff1df;
+  color: #4f341f;
 }
 
 .room-ledger p {
   margin: 0;
-  color: rgba(245, 231, 213, 0.82);
+  color: rgba(91, 63, 41, 0.78);
 }
 
 .room-ledger-meta {
@@ -641,7 +643,7 @@ select:focus-visible {
 .room-ledger-meta div {
   padding: 12px 14px;
   border-radius: 18px;
-  background: rgba(255, 244, 229, 0.08);
+  background: rgba(255, 248, 240, 0.72);
 }
 
 .room-ledger-meta span {
@@ -649,14 +651,14 @@ select:focus-visible {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: rgba(229, 174, 117, 0.84);
+  color: rgba(160, 102, 54, 0.84);
 }
 
 .room-ledger-meta strong {
   display: block;
   margin-top: 7px;
   font-weight: 700;
-  color: #fff1df;
+  color: #5a3921;
 }
 
 .room-status-strip {
@@ -668,9 +670,9 @@ select:focus-visible {
   min-height: 52px;
   padding: 0 18px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 236, 214, 0.12);
-  background: rgba(31, 19, 18, 0.54);
-  color: rgba(248, 236, 223, 0.9);
+  border: 1px solid rgba(166, 124, 86, 0.16);
+  background: rgba(255, 248, 240, 0.84);
+  color: rgba(100, 72, 47, 0.88);
   backdrop-filter: blur(10px);
 }
 
@@ -682,10 +684,10 @@ select:focus-visible {
   gap: 8px;
   padding: 18px 20px;
   border-radius: 24px;
-  border: 1px solid rgba(255, 228, 206, 0.14);
+  border: 1px solid rgba(168, 125, 86, 0.16);
   background:
-    linear-gradient(180deg, rgba(255, 250, 244, 0.14), rgba(255, 250, 244, 0.05));
-  color: #fff3e6;
+    linear-gradient(180deg, rgba(255, 252, 248, 0.82), rgba(250, 237, 220, 0.62));
+  color: #5d3b26;
   backdrop-filter: blur(14px);
   cursor: pointer;
   transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
@@ -694,9 +696,9 @@ select:focus-visible {
 
 .room-object:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 20px 40px rgba(0, 0, 0, 0.22);
-  background: linear-gradient(180deg, rgba(255, 250, 244, 0.18), rgba(255, 250, 244, 0.08));
-  border-color: rgba(255, 228, 206, 0.22);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 18px 36px rgba(130, 93, 58, 0.14);
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.96), rgba(250, 240, 226, 0.84));
+  border-color: rgba(168, 125, 86, 0.24);
 }
 
 .room-object strong {
@@ -705,7 +707,7 @@ select:focus-visible {
 }
 
 .room-object small {
-  color: rgba(255, 240, 224, 0.76);
+  color: rgba(101, 72, 48, 0.7);
 }
 
 .room-object strong,
@@ -726,8 +728,8 @@ select:focus-visible {
   min-height: 28px;
   padding: 0 10px;
   border-radius: 999px;
-  background: rgba(255, 232, 206, 0.16);
-  color: rgba(255, 233, 211, 0.84);
+  background: rgba(214, 167, 122, 0.16);
+  color: rgba(137, 87, 43, 0.9);
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -792,8 +794,8 @@ select:focus-visible {
   height: 126px;
   padding: 8px;
   border-radius: 20px;
-  background: rgba(16, 14, 13, 0.92);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  background: rgba(90, 62, 48, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(255, 248, 240, 0.14);
 }
 
 .phone-silhouette span {
@@ -801,7 +803,7 @@ select:focus-visible {
   width: 100%;
   height: 100%;
   border-radius: 14px;
-  background: linear-gradient(180deg, #d7bb9f, #92633e);
+  background: linear-gradient(180deg, #f3e4d2, #d2b18a);
 }
 
 .vinyl-disc {
@@ -809,8 +811,8 @@ select:focus-visible {
   height: 68px;
   border-radius: 999px;
   background:
-    radial-gradient(circle at center, #d4b08d 0 10px, #201915 10px 16px, #151210 16px 100%);
-  box-shadow: inset 0 0 0 10px rgba(255, 255, 255, 0.04);
+    radial-gradient(circle at center, #f6dcc0 0 10px, #7d5841 10px 16px, #4e3629 16px 100%);
+  box-shadow: inset 0 0 0 10px rgba(255, 249, 240, 0.08);
 }
 
 .spinning {
@@ -830,7 +832,7 @@ select:focus-visible {
   padding: 22px;
   border-radius: var(--radius-card);
   background:
-    linear-gradient(180deg, rgba(255, 248, 239, 0.92), rgba(244, 228, 208, 0.88));
+    linear-gradient(180deg, rgba(255, 252, 248, 0.96), rgba(245, 232, 214, 0.92));
   color: #2d231a;
 }
 
@@ -869,8 +871,8 @@ select:focus-visible {
   align-items: center;
   justify-content: center;
   background:
-    radial-gradient(circle at center, rgba(255, 216, 173, 0.08), transparent 34%),
-    rgba(17, 12, 12, 0.56);
+    radial-gradient(circle at center, rgba(255, 233, 205, 0.18), transparent 36%),
+    rgba(113, 84, 63, 0.2);
   backdrop-filter: blur(10px);
   z-index: 4;
   animation: overlayIn 220ms ease-out;
@@ -885,7 +887,7 @@ select:focus-visible {
   padding: 18px;
   border: 1px solid rgba(119, 83, 50, 0.12);
   background:
-    linear-gradient(180deg, rgba(247, 240, 230, 0.98), rgba(242, 228, 208, 0.98));
+    linear-gradient(180deg, rgba(255, 251, 245, 0.98), rgba(247, 235, 219, 0.98));
   animation: phoneIn 240ms ease-out;
   box-shadow: var(--shadow-phone);
 }
