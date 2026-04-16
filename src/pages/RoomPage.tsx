@@ -1,14 +1,17 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { HistoryPanel } from '../components/HistoryPanel'
 import { PricingPanel } from '../components/PricingPanel'
 import { SealPanel } from '../components/SealPanel'
+import { StatusPill } from '../components/StatusPill'
 import { SettingsPanel } from '../components/SettingsPanel'
 import { UnsealPanel } from '../components/UnsealPanel'
+import { subscribeToAmbersChanged } from '../lib/amberEvents'
+import { type Amber, fetchAmbers } from '../lib/api'
 import { useAuth } from '../lib/auth'
-import { formatClock } from '../lib/time'
+import { formatClock, formatDateTime, getCountdownText } from '../lib/time'
 
-type RoomObject = 'clock' | 'vinyl' | 'radio' | 'calendar' | 'diary'
+type RoomObject = 'clock' | 'vinyl' | 'radio' | 'calendar' | 'diary' | 'amber'
 type PhoneApp = 'seal' | 'unseal' | 'history' | 'pricing' | 'settings'
 
 const phoneApps: PhoneApp[] = ['seal', 'unseal', 'history', 'pricing', 'settings']
@@ -44,6 +47,7 @@ const roomObjectLabels: Record<RoomObject, string> = {
   radio: 'Radio',
   calendar: 'Calendar',
   diary: 'Diary',
+  amber: 'Amber archive',
 }
 
 const roomObjectBadges: Record<RoomObject, string> = {
@@ -52,6 +56,7 @@ const roomObjectBadges: Record<RoomObject, string> = {
   radio: 'RAD',
   calendar: 'DAY',
   diary: 'NOTE',
+  amber: 'AMB',
 }
 
 function getTimeSegment(date: Date) {
@@ -127,8 +132,40 @@ function getInitialPhoneState(searchParams: URLSearchParams) {
   }
 }
 
+function getAmberAmbientCopy(amber: Amber, nowMs: number) {
+  if (amber.status === 'scheduled') {
+    return getCountdownText(amber.openAt, nowMs)
+  }
+
+  if (amber.status === 'ready') {
+    return 'Ready to unseal'
+  }
+
+  if (amber.status === 'opened') {
+    return `Opened ${formatDateTime(amber.openAt)}`
+  }
+
+  return 'Cancelled'
+}
+
+function getAmberInfoCopy(amber: Amber, nowMs: number) {
+  if (amber.status === 'scheduled') {
+    return `This amber is still sealed. It opens in ${getCountdownText(amber.openAt, nowMs)}.`
+  }
+
+  if (amber.status === 'ready') {
+    return 'This amber has reached its opening time. It now sits in the room as a live, ready memory.'
+  }
+
+  if (amber.status === 'opened') {
+    return 'This amber has already been opened, so it behaves more like a preserved memory than a sealed one.'
+  }
+
+  return 'This amber was cancelled before it could open. It remains part of the room archive, but no longer active.'
+}
+
 export function RoomPage() {
-  const { currentUser } = useAuth()
+  const { currentUser, token } = useAuth()
   const [searchParams] = useSearchParams()
   const initialPhoneState = useMemo(() => getInitialPhoneState(searchParams), [searchParams])
   const initialActivePhoneApp =
@@ -137,6 +174,10 @@ export function RoomPage() {
   const [activePhoneApp, setActivePhoneApp] = useState<PhoneApp>(initialActivePhoneApp)
   const [activeObject, setActiveObject] = useState<RoomObject | null>(null)
   const [clock, setClock] = useState(() => new Date())
+  const [roomAmbers, setRoomAmbers] = useState<Amber[]>([])
+  const [isAmberLoading, setIsAmberLoading] = useState(false)
+  const [amberError, setAmberError] = useState<string | null>(null)
+  const [activeAmberId, setActiveAmberId] = useState<string | null>(null)
   const [selectedRadio, setSelectedRadio] = useState(radioStations[0])
   const [diaryNote, setDiaryNote] = useState(
     () => window.localStorage.getItem('mia-room-diary') || '',
@@ -153,6 +194,41 @@ export function RoomPage() {
     month: 'long',
     day: 'numeric',
   })
+  const activeAmber = roomAmbers.find((item) => item.id === activeAmberId) ?? roomAmbers[0] ?? null
+
+  const loadRoomAmbers = useCallback(async () => {
+    if (!token) {
+      setRoomAmbers([])
+      setActiveAmberId(null)
+      setAmberError(null)
+      setIsAmberLoading(false)
+      return
+    }
+
+    try {
+      setIsAmberLoading(true)
+      const response = await fetchAmbers(token, {
+        status: 'all',
+        includeArchived: false,
+        page: 1,
+        pageSize: 4,
+      })
+      const nextItems = response.items
+      setRoomAmbers(nextItems)
+      setAmberError(null)
+      setActiveAmberId((current) => {
+        if (current && nextItems.some((item) => item.id === current)) {
+          return current
+        }
+
+        return nextItems[0]?.id ?? null
+      })
+    } catch (nextError) {
+      setAmberError(nextError instanceof Error ? nextError.message : 'Failed to load ambers for the room')
+    } finally {
+      setIsAmberLoading(false)
+    }
+  }, [token])
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -166,10 +242,22 @@ export function RoomPage() {
     window.localStorage.setItem('mia-room-diary', diaryNote)
   }, [diaryNote])
 
+  useEffect(() => {
+    void loadRoomAmbers()
+    return subscribeToAmbersChanged(() => {
+      void loadRoomAmbers()
+    })
+  }, [loadRoomAmbers])
+
   function openPhone(app: PhoneApp) {
     const nextApp = currentUser || guestPhoneApps.includes(app) ? app : 'unseal'
     setActivePhoneApp(nextApp)
     setIsPhoneOpen(true)
+  }
+
+  function focusAmber(amberId: string) {
+    setActiveAmberId(amberId)
+    setActiveObject('amber')
   }
 
   function renderPhoneApp() {
@@ -300,6 +388,68 @@ export function RoomPage() {
             <small>{clock.toLocaleDateString()}</small>
           </button>
 
+          <section className="room-amber-cluster">
+            <div className="room-amber-cluster-head">
+              <div>
+                <p className="panel-tag">Amber archive</p>
+                <h3>{currentUser ? 'Live ambers in the room' : 'Amber presence'}</h3>
+              </div>
+              {currentUser ? (
+                <button className="phone-button ghost" onClick={() => openPhone('history')} type="button">
+                  Open history
+                </button>
+              ) : (
+                <button className="phone-button ghost" onClick={() => openPhone('unseal')} type="button">
+                  Open unseal
+                </button>
+              )}
+            </div>
+
+            {currentUser ? (
+              <>
+                {isAmberLoading ? <p className="helper-copy">Loading amber presence...</p> : null}
+                {amberError ? <p className="feedback error">{amberError}</p> : null}
+                {!isAmberLoading && !amberError ? (
+                  roomAmbers.length > 0 ? (
+                    <div className="amber-node-grid">
+                      {roomAmbers.map((amber) => (
+                        <button
+                          key={amber.id}
+                          className={
+                            activeAmberId === amber.id
+                              ? `amber-node amber-node-${amber.status} active`
+                              : `amber-node amber-node-${amber.status}`
+                          }
+                          onClick={() => focusAmber(amber.id)}
+                          type="button"
+                        >
+                          <span className="amber-node-glow" />
+                          <span className="amber-node-code">{amber.code}</span>
+                          <strong>{amber.recipientEmail}</strong>
+                          <small>{getAmberAmbientCopy(amber, clock.getTime())}</small>
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="room-amber-empty">
+                      <p>No active amber in the room yet.</p>
+                      <button className="phone-button ghost" onClick={() => openPhone('seal')} type="button">
+                        Seal your first amber
+                      </button>
+                    </div>
+                  )
+                ) : null}
+              </>
+            ) : (
+              <div className="room-amber-empty">
+                <p>Guest mode can feel the room, but only the unseal path is active.</p>
+                <button className="phone-button ghost" onClick={() => openPhone('unseal')} type="button">
+                  Open unseal
+                </button>
+              </div>
+            )}
+          </section>
+
           <button
             className="room-object object-diary"
             onClick={() => setActiveObject('diary')}
@@ -404,6 +554,48 @@ export function RoomPage() {
                   value={diaryNote}
                   onChange={(event) => setDiaryNote(event.target.value)}
                 />
+              </div>
+            ) : null}
+
+            {activeObject === 'amber' ? (
+              <div className="room-info-card">
+                <p className="panel-tag">Amber archive</p>
+                {activeAmber ? (
+                  <>
+                    <div className="room-amber-focus-head">
+                      <div>
+                        <h3>{activeAmber.code}</h3>
+                        <p className="helper-copy">{activeAmber.recipientEmail}</p>
+                      </div>
+                      <StatusPill status={activeAmber.status} />
+                    </div>
+                    <p>{getAmberInfoCopy(activeAmber, clock.getTime())}</p>
+                    <dl className="mini-meta">
+                      <div>
+                        <dt>Open at</dt>
+                        <dd>{formatDateTime(activeAmber.openAt)}</dd>
+                      </div>
+                      <div>
+                        <dt>Created</dt>
+                        <dd>{formatDateTime(activeAmber.createdAt)}</dd>
+                      </div>
+                    </dl>
+                    <p className="room-amber-message">{activeAmber.message}</p>
+                    <div className="button-row">
+                      <button className="phone-button ghost" onClick={() => openPhone('history')} type="button">
+                        Review in history
+                      </button>
+                      <button className="phone-button ghost" onClick={() => openPhone('seal')} type="button">
+                        Seal another
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h3>Amber archive</h3>
+                    <p>The room has no active amber to surface yet. Once you seal one, it will appear here as part of the scene.</p>
+                  </>
+                )}
               </div>
             ) : null}
           </aside>

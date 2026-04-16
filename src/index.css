@@ -731,9 +731,9 @@ select:focus-visible {
     minmax(142px, 1.06fr)
     auto;
   grid-template-areas:
-    "ledger ledger . calendar info info"
-    "clock . . calendar info info"
-    "vinyl vinyl . . radio radio"
+    "ledger ledger amber amber info info"
+    "clock amber amber calendar info info"
+    "vinyl vinyl amber amber radio radio"
     "vinyl vinyl diary diary phone phone"
     "status status status status status status";
 }
@@ -757,6 +757,157 @@ select:focus-visible {
   color: #5b3f29;
   transform: translate3d(0, 0, 96px) rotateX(6deg) rotateY(-5deg);
   transform-style: preserve-3d;
+}
+
+.room-amber-cluster {
+  grid-area: amber;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-self: center;
+  padding: 20px 22px;
+  border-radius: 32px;
+  border: 1px solid rgba(174, 132, 96, 0.12);
+  background:
+    linear-gradient(160deg, rgba(255, 250, 243, 0.62), rgba(242, 223, 196, 0.34));
+  box-shadow: 0 24px 54px rgba(128, 89, 52, 0.08);
+  backdrop-filter: blur(18px);
+  transform: translate3d(0, 0, 104px) rotateX(10deg) rotateY(2deg);
+  transform-style: preserve-3d;
+}
+
+.room-amber-cluster-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.room-amber-cluster-head h3 {
+  margin: 4px 0 0;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: #4e321d;
+}
+
+.amber-node-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.amber-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 120px;
+  padding: 16px;
+  border: 1px solid rgba(165, 118, 73, 0.12);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 248, 237, 0.88), rgba(250, 232, 203, 0.52));
+  color: #573721;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 18px 34px rgba(120, 82, 49, 0.08);
+  transition:
+    transform var(--ease-standard),
+    box-shadow var(--ease-standard),
+    border-color var(--ease-standard),
+    background var(--ease-standard);
+}
+
+.amber-node:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 42px rgba(120, 82, 49, 0.12);
+  border-color: rgba(165, 118, 73, 0.2);
+}
+
+.amber-node.active {
+  border-color: rgba(169, 93, 45, 0.28);
+  box-shadow:
+    0 0 0 1px rgba(245, 214, 176, 0.54),
+    0 28px 46px rgba(120, 82, 49, 0.14);
+}
+
+.amber-node strong,
+.amber-node small,
+.amber-node-code {
+  position: relative;
+  z-index: 1;
+}
+
+.amber-node strong {
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.amber-node small {
+  color: rgba(87, 55, 33, 0.72);
+}
+
+.amber-node-code {
+  font-family: "Cascadia Code", Consolas, monospace;
+  color: #8d5b31;
+  font-size: 0.76rem;
+}
+
+.amber-node-glow {
+  position: absolute;
+  inset: 14px auto auto 14px;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  filter: blur(1px);
+  opacity: 0.86;
+}
+
+.amber-node-scheduled .amber-node-glow {
+  background: radial-gradient(circle, rgba(242, 175, 77, 0.7), rgba(242, 175, 77, 0));
+}
+
+.amber-node-ready .amber-node-glow {
+  background: radial-gradient(circle, rgba(111, 214, 120, 0.72), rgba(111, 214, 120, 0));
+}
+
+.amber-node-opened .amber-node-glow {
+  background: radial-gradient(circle, rgba(104, 134, 255, 0.68), rgba(104, 134, 255, 0));
+}
+
+.amber-node-cancelled .amber-node-glow {
+  background: radial-gradient(circle, rgba(210, 110, 110, 0.62), rgba(210, 110, 110, 0));
+}
+
+.room-amber-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.room-amber-empty p {
+  margin: 0;
+  color: rgba(88, 59, 36, 0.72);
+}
+
+.room-amber-focus-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.room-amber-focus-head h3 {
+  margin: 0;
+}
+
+.room-amber-message {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 248, 239, 0.64);
+  border: 1px solid rgba(168, 125, 86, 0.12);
+  color: rgba(63, 43, 28, 0.9);
 }
 
 .room-ledger .panel-tag {
@@ -1496,9 +1647,10 @@ select:focus-visible {
       auto;
     grid-template-areas:
       "ledger ledger info info"
-      "calendar clock info info"
-      "vinyl vinyl radio radio"
-      "diary diary phone phone"
+      "amber amber info info"
+      "calendar clock radio radio"
+      "vinyl vinyl diary diary"
+      "phone phone phone phone"
       "status status status status";
   }
 
@@ -1508,6 +1660,10 @@ select:focus-visible {
 
   .room-info {
     width: 100%;
+  }
+
+  .room-amber-cluster {
+    transform: translate3d(0, 0, 84px) rotateX(8deg);
   }
 
   .room-object {
@@ -1531,6 +1687,10 @@ select:focus-visible {
     padding: 0 14px;
     font-size: 0.86rem;
   }
+
+  .amber-node-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 920px) {
@@ -1553,6 +1713,7 @@ select:focus-visible {
 
   .room-object,
   .room-info,
+  .room-amber-cluster,
   .phone-overlay,
   .room-ledger,
   .room-status-strip,
@@ -1579,6 +1740,7 @@ select:focus-visible {
   }
 
   .room-ledger,
+  .room-amber-cluster,
   .room-status-strip {
     order: -1;
   }
@@ -1593,6 +1755,7 @@ select:focus-visible {
   }
 
   .room-ledger,
+  .room-amber-cluster,
   .room-status-strip,
   .room-object,
   .room-info,

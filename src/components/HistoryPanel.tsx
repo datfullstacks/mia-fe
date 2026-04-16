@@ -10,6 +10,7 @@ import {
   type PaginationMeta,
   updateAmber,
 } from '../lib/api'
+import { notifyAmbersChanged } from '../lib/amberEvents'
 import { useAuth } from '../lib/auth'
 import { formatDateTime, toDateTimeInputValue } from '../lib/time'
 import { StatusPill } from './StatusPill'
@@ -156,6 +157,7 @@ export function HistoryPanel() {
         ...(editForm.passcode.trim() ? { passcode: editForm.passcode.trim() } : {}),
       })
       stopEditing()
+      notifyAmbersChanged()
       await load()
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Failed to update amber')
@@ -175,6 +177,7 @@ export function HistoryPanel() {
       if (editingId === item.id) {
         stopEditing()
       }
+      notifyAmbersChanged()
       await load()
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Failed to cancel amber')
@@ -207,6 +210,7 @@ export function HistoryPanel() {
 
       setSavingId(item.id)
       await archiveAmber(token, item.id)
+      notifyAmbersChanged()
       await load()
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Failed to archive amber')

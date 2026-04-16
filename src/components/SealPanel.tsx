@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { createAmber } from '../lib/api'
+import { notifyAmbersChanged } from '../lib/amberEvents'
 import { useAuth } from '../lib/auth'
 
 function createInitialOpenAt() {
@@ -44,6 +45,7 @@ export function SealPanel() {
         openAt: nextOpenAt,
         passcode: '',
       })
+      notifyAmbersChanged()
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Failed to create amber')
     } finally {
