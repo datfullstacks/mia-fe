@@ -14,27 +14,38 @@ export function SettingsPanel() {
     <div className="phone-panel">
       <div className="panel-heading">
         <p className="panel-tag">Settings</p>
-        <h3>System settings shell</h3>
+        <h3>Cài đặt</h3>
       </div>
 
       <div className="settings-stack">
         <div className="phone-card">
-          <span className="mono-label">{currentUser?.email ?? 'Guest session'}</span>
-          <h4>{currentUser ? currentUser.name : 'No active account'}</h4>
+          <span className="mono-label">{currentUser?.email ?? 'Khách'}</span>
+          <h4>{currentUser ? currentUser.name : 'Chưa đăng nhập'}</h4>
         </div>
 
         <label className="slider-field">
-          Ambient volume
+          Âm lượng không gian
           <input defaultValue={45} max={100} min={0} type="range" />
         </label>
 
         <label className="slider-field">
-          Vinyl volume
+          Âm lượng đĩa than
           <input defaultValue={30} max={100} min={0} type="range" />
         </label>
 
+        <div className="button-row">
+          <button className="phone-button ghost" onClick={() => navigate('/gate')} type="button">
+            Về cổng
+          </button>
+          {currentUser?.isAdmin ? (
+            <button className="phone-button ghost" onClick={() => navigate('/admin')} type="button">
+              Mở admin
+            </button>
+          ) : null}
+        </div>
+
         <button className="phone-button ghost" onClick={() => void handleLogout()} type="button">
-          {currentUser ? 'Logout' : 'Return to Gate'}
+          {currentUser ? 'Đăng xuất' : 'Về cổng'}
         </button>
       </div>
     </div>

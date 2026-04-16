@@ -30,7 +30,7 @@ export function UnsealPanel() {
       })
       setResult(response.item)
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : 'Failed to check amber')
+      setError(nextError instanceof Error ? nextError.message : 'Không thể kiểm tra amber')
     }
   }
 
@@ -43,16 +43,16 @@ export function UnsealPanel() {
     <div className="phone-panel">
       <div className="panel-heading">
         <p className="panel-tag">Unseal</p>
-        <h3>Guest unlock flow prototype</h3>
+        <h3>Mở amber</h3>
       </div>
 
       <form className="phone-form compact" onSubmit={handleSubmit}>
         <label>
-          Amber code
+          Mã amber
           <input value={code} onChange={(event) => setCode(event.target.value)} />
         </label>
         <label>
-          Passcode
+          Mật mã
           <input
             type="password"
             value={passcode}
@@ -60,12 +60,12 @@ export function UnsealPanel() {
           />
         </label>
         <button className="phone-button primary" type="submit">
-          Check amber
+          Kiểm tra amber
         </button>
       </form>
 
       <p className="helper-copy">
-        Guest unlock is now backed by a real Express route using amber code and passcode.
+        Chế độ khách có thể mở amber bằng mã amber và mật mã.
       </p>
 
       {error ? <p className="feedback error">{error}</p> : null}
@@ -79,10 +79,10 @@ export function UnsealPanel() {
             </div>
             <StatusPill status={result.state === 'opened' ? 'opened' : 'scheduled'} />
           </div>
-          <p className="helper-copy">Opens {formatDateTime(result.openAt)}</p>
+          <p className="helper-copy">Mở lúc {formatDateTime(result.openAt)}</p>
           {countdown ? <p className="countdown">{countdown}</p> : null}
           {result.state === 'not_ready' ? (
-            <p>Amber found, but it is still sealed.</p>
+            <p>Amber đã được tìm thấy nhưng vẫn chưa tới giờ mở.</p>
           ) : null}
           {result.message ? <p>{result.message}</p> : null}
         </article>

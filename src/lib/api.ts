@@ -76,6 +76,16 @@ export interface Payment {
   qrUrl: string | null
 }
 
+export interface RadioStation {
+  id: string
+  name: string
+  streamUrl: string
+  homepage: string
+  tags: string[]
+  language: string
+  frequency: number
+}
+
 export interface MailLog {
   id: string
   amberId: string
@@ -387,6 +397,10 @@ export function fetchPayments(token?: string | null) {
 
 export function fetchPaymentPlans() {
   return request<{ items: PaymentPlan[] }>('/api/payment-plans')
+}
+
+export function fetchRadioStations() {
+  return request<{ items: RadioStation[] }>('/api/radio/stations')
 }
 
 export function fetchPayment(token: string | null | undefined, paymentId: string) {

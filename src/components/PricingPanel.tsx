@@ -16,10 +16,10 @@ function getPaidLabel(payment: Payment) {
   }
 
   if (payment.status === 'paid') {
-    return 'Confirmed'
+    return 'Đã xác nhận'
   }
 
-  return 'Waiting'
+  return 'Đang chờ'
 }
 
 function formatCountdown(expiresAt: string | null, now: number) {
@@ -30,14 +30,14 @@ function formatCountdown(expiresAt: string | null, now: number) {
   const remainingMs = new Date(expiresAt).getTime() - now
 
   if (remainingMs <= 0) {
-    return 'Order expired'
+    return 'Đơn đã hết hạn'
   }
 
   const totalSeconds = Math.floor(remainingMs / 1000)
   const minutes = Math.floor(totalSeconds / 60)
   const seconds = totalSeconds % 60
 
-  return `Expires in ${minutes}:${seconds.toString().padStart(2, '0')}`
+  return `Hết hạn sau ${minutes}:${seconds.toString().padStart(2, '0')}`
 }
 
 export function PricingPanel() {
@@ -73,7 +73,7 @@ export function PricingPanel() {
         setPlans(response.items)
         setSelectedPlanId((current) => current || response.items[0]?.id || '')
       } catch (nextError) {
-        setError(nextError instanceof Error ? nextError.message : 'Failed to load pricing plans')
+        setError(nextError instanceof Error ? nextError.message : 'Không thể tải gói amber')
       }
     }
 
@@ -101,7 +101,7 @@ export function PricingPanel() {
         return firstPending?.id || response.items[0]?.id || null
       })
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : 'Failed to load payments')
+        setError(nextError instanceof Error ? nextError.message : 'Không thể tải đơn thanh toán')
     }
   }, [token])
 
@@ -119,7 +119,7 @@ export function PricingPanel() {
           await refreshSession()
         }
       } catch (nextError) {
-        setError(nextError instanceof Error ? nextError.message : 'Failed to refresh payment')
+        setError(nextError instanceof Error ? nextError.message : 'Không thể cập nhật trạng thái thanh toán')
       }
     },
     [refreshSession, syncPaymentIntoState, token],
@@ -165,11 +165,11 @@ export function PricingPanel() {
   async function handleRequest() {
     try {
       if (!token) {
-        throw new Error('Login is required to create a payment QR')
+        throw new Error('Bạn cần đăng nhập để tạo QR thanh toán')
       }
 
       if (!selectedPlanId) {
-        throw new Error('Choose a pricing package first')
+        throw new Error('Hãy chọn một gói amber trước')
       }
 
       setIsCreating(true)
@@ -179,11 +179,11 @@ export function PricingPanel() {
       })
       syncPaymentIntoState(response.item)
       setActivePaymentId(response.item.id)
-      setResult(`QR ready for ${response.item.paymentRef}`)
+      setResult(`Đã tạo QR cho ${response.item.paymentRef}`)
       setError(null)
       await loadPayments()
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : 'Failed to create payment QR')
+      setError(nextError instanceof Error ? nextError.message : 'Không thể tạo QR thanh toán')
     } finally {
       setIsCreating(false)
     }
@@ -197,7 +197,7 @@ export function PricingPanel() {
     <div className="phone-panel">
       <div className="panel-heading">
         <p className="panel-tag">Pricing</p>
-        <h3>Buy more amber</h3>
+        <h3>Mua thêm amber</h3>
       </div>
 
       <div className="pricing-grid">
@@ -212,14 +212,13 @@ export function PricingPanel() {
         </div>
         <div className="pricing-copy">
           <p>
-            New accounts start with 3 free amber. Pick a package, scan the SePay QR, and keep the
-            transfer description unchanged. MIA will add the purchased amber automatically when the
-            webhook matches the payment ref and amount.
+            Tài khoản mới có 3 amber miễn phí. Chọn gói, quét mã SePay và giữ nguyên nội dung
+            chuyển khoản. Hệ thống sẽ cộng amber tự động khi webhook khớp mã thanh toán và số tiền.
           </p>
           <ul className="plain-list compact">
-            <li>Remaining amber: {currentUser ? currentUser.amberQuota.remainingCredits : 0}</li>
-            <li>Used amber: {currentUser ? currentUser.amberQuota.usedCredits : 0}</li>
-            <li>Admin fallback remains available for review-only cases.</li>
+            <li>Còn lại: {currentUser ? currentUser.amberQuota.remainingCredits : 0} amber</li>
+            <li>Đã dùng: {currentUser ? currentUser.amberQuota.usedCredits : 0} amber</li>
+            <li>Nếu lệch tiền hoặc sai nội dung, admin vẫn có thể kiểm tra tay.</li>
           </ul>
         </div>
       </div>
@@ -240,7 +239,7 @@ export function PricingPanel() {
       </div>
 
       <label className="stacked-field">
-        Internal note
+        Ghi chú nội bộ
         <input value={note} onChange={(event) => setNote(event.target.value)} />
       </label>
 
@@ -251,10 +250,10 @@ export function PricingPanel() {
         type="button"
       >
         {isCreating
-          ? 'Preparing QR...'
+          ? 'Đang tạo QR...'
           : selectedPlan
-            ? `Create QR for ${selectedPlan.amberCredits} amber`
-            : 'Create SePay QR'}
+            ? `Tạo QR cho ${selectedPlan.amberCredits} amber`
+            : 'Tạo QR SePay'}
       </button>
 
       {error ? <p className="feedback error">{error}</p> : null}
@@ -278,36 +277,36 @@ export function PricingPanel() {
               <dd>{activePayment.bankName}</dd>
             </div>
             <div>
-              <dt>Account</dt>
+              <dt>Tài khoản</dt>
               <dd>{activePayment.accountNumber}</dd>
             </div>
             <div>
-              <dt>Holder</dt>
-              <dd>{activePayment.accountName || 'Configured in SePay'}</dd>
+              <dt>Chủ tài khoản</dt>
+              <dd>{activePayment.accountName || 'Đã cấu hình trong SePay'}</dd>
             </div>
             <div>
-              <dt>Description</dt>
+              <dt>Nội dung CK</dt>
               <dd>{activePayment.paymentRef}</dd>
             </div>
           </dl>
           <p className="helper-copy">
-            Do not edit the transfer description. MIA matches the webhook by this payment ref.
+            Đừng sửa nội dung chuyển khoản. Hệ thống đối soát theo đúng mã này.
           </p>
           {countdown ? <p className="countdown">{countdown}</p> : null}
           {activePayment.status === 'pending_review' ? (
             <div className="feedback error">
-              <p>A transfer was detected but it did not match cleanly.</p>
+              <p>Đã phát hiện giao dịch nhưng chưa khớp hoàn toàn.</p>
               {activePayment.statusDetail ? <p>{activePayment.statusDetail}</p> : null}
               {activePayment.lastTransferAt ? (
-                <p>Latest transfer: {formatDateTime(activePayment.lastTransferAt)}</p>
+                <p>Giao dịch gần nhất: {formatDateTime(activePayment.lastTransferAt)}</p>
               ) : null}
             </div>
           ) : null}
           {activePayment.status === 'paid' ? (
-            <p className="feedback success">Payment confirmed by SePay. Amber has been added to your balance.</p>
+            <p className="feedback success">SePay đã xác nhận. Amber đã được cộng vào tài khoản của bạn.</p>
           ) : null}
           {activePayment.status === 'approved_manual' ? (
-            <p className="feedback success">This amber package was manually approved by admin.</p>
+            <p className="feedback success">Gói amber này đã được admin duyệt tay.</p>
           ) : null}
         </article>
       ) : null}
@@ -323,27 +322,27 @@ export function PricingPanel() {
               <StatusPill status={payment.status} />
             </div>
             <p>{payment.planLabel} · {payment.amberCredits} amber</p>
-            <p>{payment.note || 'No note'}</p>
-            <dl className="mini-meta">
-              <div>
-                <dt>Created</dt>
-                <dd>{formatDateTime(payment.createdAt)}</dd>
-              </div>
-              <div>
-                <dt>Expires</dt>
-                <dd>{payment.expiresAt ? formatDateTime(payment.expiresAt) : 'No expiry'}</dd>
-              </div>
-              <div>
-                <dt>Paid</dt>
-                <dd>{getPaidLabel(payment)}</dd>
-              </div>
-              <div>
-                <dt>Provider Tx</dt>
-                <dd>{payment.providerTransactionId || 'Pending webhook'}</dd>
-              </div>
+              <p>{payment.note || 'Không có ghi chú'}</p>
+              <dl className="mini-meta">
+                <div>
+                  <dt>Tạo lúc</dt>
+                  <dd>{formatDateTime(payment.createdAt)}</dd>
+                </div>
+                <div>
+                  <dt>Hết hạn</dt>
+                  <dd>{payment.expiresAt ? formatDateTime(payment.expiresAt) : 'Không có hạn'}</dd>
+                </div>
+                <div>
+                  <dt>Thanh toán</dt>
+                  <dd>{getPaidLabel(payment)}</dd>
+                </div>
+                <div>
+                  <dt>Mã giao dịch</dt>
+                  <dd>{payment.providerTransactionId || 'Đang chờ webhook'}</dd>
+                </div>
               {payment.lastTransferAmount ? (
                 <div>
-                  <dt>Received</dt>
+                  <dt>Đã nhận</dt>
                   <dd>{formatVnd(payment.lastTransferAmount)}</dd>
                 </div>
               ) : null}
@@ -358,7 +357,7 @@ export function PricingPanel() {
                 }}
                 type="button"
               >
-                Open checkout
+                Mở đơn này
               </button>
             </div>
           </article>

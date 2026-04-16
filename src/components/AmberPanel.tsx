@@ -14,9 +14,9 @@ export function AmberPanel({ onOpenSeal, onOpenHistory, onOpenPricing }: AmberPa
       <div className="phone-panel">
         <div className="panel-heading">
           <p className="panel-tag">Amber</p>
-          <h3>Amber balance</h3>
+          <h3>Kho amber</h3>
         </div>
-        <p className="feedback error">Login is required to manage your amber allowance.</p>
+        <p className="feedback error">Bạn cần đăng nhập để quản lý số amber của mình.</p>
       </div>
     )
   }
@@ -27,24 +27,24 @@ export function AmberPanel({ onOpenSeal, onOpenHistory, onOpenPricing }: AmberPa
     <div className="phone-panel">
       <div className="panel-heading">
         <p className="panel-tag">Amber</p>
-        <h3>Your amber balance</h3>
+        <h3>Số amber hiện có</h3>
       </div>
 
       <div className="metric-grid amber-metric-grid">
         <article className="metric-card">
-          <span>Remaining</span>
+          <span>Còn lại</span>
           <strong>{quota.remainingCredits}</strong>
         </article>
         <article className="metric-card">
-          <span>Used</span>
+          <span>Đã dùng</span>
           <strong>{quota.usedCredits}</strong>
         </article>
         <article className="metric-card">
-          <span>Free start</span>
+          <span>Tặng đầu</span>
           <strong>{quota.freeCredits}</strong>
         </article>
         <article className="metric-card">
-          <span>Purchased</span>
+          <span>Đã mua</span>
           <strong>{quota.purchasedCredits}</strong>
         </article>
       </div>
@@ -52,23 +52,23 @@ export function AmberPanel({ onOpenSeal, onOpenHistory, onOpenPricing }: AmberPa
       <article className="phone-card">
         <div className="phone-card-head">
           <div>
-            <span className="mono-label">Allowance</span>
-            <h4>{quota.totalCredits} amber total</h4>
+            <span className="mono-label">Hạn mức</span>
+            <h4>{quota.totalCredits} amber tổng</h4>
           </div>
         </div>
         <p>
-          New accounts start with 3 free amber. Every time you seal a new amber, one slot is used.
-          Buy a package whenever the remaining balance reaches zero.
+          Tài khoản mới có sẵn 3 amber miễn phí. Mỗi lần niêm phong một amber mới sẽ trừ 1 lượt.
+          Khi hết lượt, bạn chỉ cần mua thêm gói amber.
         </p>
         <div className="button-row">
           <button className="phone-button primary" onClick={onOpenSeal} type="button">
-            Seal amber
+            Tạo amber
           </button>
           <button className="phone-button ghost" onClick={onOpenHistory} type="button">
-            Open history
+            Xem lịch sử
           </button>
           <button className="phone-button ghost" onClick={onOpenPricing} type="button">
-            Buy more amber
+            Mua thêm amber
           </button>
         </div>
       </article>

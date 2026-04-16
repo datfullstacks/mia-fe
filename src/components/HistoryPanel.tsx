@@ -36,27 +36,27 @@ function getMailStatusCopy(
 ) {
   if (latestLog) {
     if (latestLog.status === 'sent') {
-      return `Sent ${formatDateTime(latestLog.sentAt)}`
+      return `Đã gửi ${formatDateTime(latestLog.sentAt)}`
     }
 
     return latestLog.errorMessage
-      ? `Failed: ${latestLog.errorMessage}`
-      : `Failed ${formatDateTime(latestLog.sentAt)}`
+      ? `Lỗi: ${latestLog.errorMessage}`
+      : `Lỗi ${formatDateTime(latestLog.sentAt)}`
   }
 
   if (event === 'amber_created') {
-    return 'No confirmation mail logged yet'
+    return 'Chưa có log mail xác nhận'
   }
 
   if (amber.status === 'scheduled') {
-    return 'Not due yet'
+    return 'Chưa tới giờ gửi'
   }
 
   if (amber.status === 'cancelled') {
-    return 'Amber cancelled before ready notification'
+    return 'Amber đã huỷ trước khi gửi thông báo'
   }
 
-  return 'Ready notification not sent yet'
+  return 'Chưa gửi thông báo mở amber'
 }
 
 export function HistoryPanel() {
@@ -87,7 +87,7 @@ export function HistoryPanel() {
         setItems([])
         setMailLogs([])
         setPagination(EMPTY_PAGINATION)
-        setError('Login is required to view your amber history')
+        setError('Bạn cần đăng nhập để xem lịch sử amber')
         setIsLoading(false)
         return
       }
@@ -112,7 +112,7 @@ export function HistoryPanel() {
       }
       setError(null)
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : 'Failed to load ambers')
+      setError(nextError instanceof Error ? nextError.message : 'Không thể tải danh sách amber')
     } finally {
       setIsLoading(false)
     }
@@ -146,7 +146,7 @@ export function HistoryPanel() {
   async function handleSave(item: Amber) {
     try {
       if (!token) {
-        throw new Error('Login is required to update amber')
+        throw new Error('Bạn cần đăng nhập để sửa amber')
       }
 
       setSavingId(item.id)
@@ -160,7 +160,7 @@ export function HistoryPanel() {
       notifyAmbersChanged()
       await load()
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : 'Failed to update amber')
+      setError(nextError instanceof Error ? nextError.message : 'Không thể cập nhật amber')
     } finally {
       setSavingId(null)
     }
@@ -169,7 +169,7 @@ export function HistoryPanel() {
   async function handleCancel(item: Amber) {
     try {
       if (!token) {
-        throw new Error('Login is required to cancel amber')
+        throw new Error('Bạn cần đăng nhập để huỷ amber')
       }
 
       setSavingId(item.id)
@@ -180,7 +180,7 @@ export function HistoryPanel() {
       notifyAmbersChanged()
       await load()
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : 'Failed to cancel amber')
+      setError(nextError instanceof Error ? nextError.message : 'Không thể huỷ amber')
     } finally {
       setSavingId(null)
     }
@@ -189,14 +189,14 @@ export function HistoryPanel() {
   async function handleRetryMailLog(mailLog: MailLog) {
     try {
       if (!token) {
-        throw new Error('Login is required to retry mail delivery')
+        throw new Error('Bạn cần đăng nhập để gửi lại mail')
       }
 
       setRetryingMailLogId(mailLog.id)
       await retryMyMailLog(token, mailLog.id)
       await load()
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : 'Failed to retry mail delivery')
+      setError(nextError instanceof Error ? nextError.message : 'Không thể gửi lại mail')
     } finally {
       setRetryingMailLogId(null)
     }
@@ -205,7 +205,7 @@ export function HistoryPanel() {
   async function handleArchive(item: Amber) {
     try {
       if (!token) {
-        throw new Error('Login is required to archive amber')
+        throw new Error('Bạn cần đăng nhập để lưu trữ amber')
       }
 
       setSavingId(item.id)
@@ -213,7 +213,7 @@ export function HistoryPanel() {
       notifyAmbersChanged()
       await load()
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : 'Failed to archive amber')
+      setError(nextError instanceof Error ? nextError.message : 'Không thể lưu trữ amber')
     } finally {
       setSavingId(null)
     }
@@ -224,16 +224,16 @@ export function HistoryPanel() {
       <div className="panel-heading inline">
         <div>
           <p className="panel-tag">History</p>
-          <h3>Your ambers</h3>
+          <h3>Lịch sử amber</h3>
         </div>
         <p className="helper-copy">
-          {pagination.totalCount} amber{pagination.totalCount === 1 ? '' : 's'}
+          {pagination.totalCount} amber
         </p>
       </div>
 
       <div className="toolbar-grid">
         <label className="stacked-field">
-          Status
+          Trạng thái
           <select
             value={statusFilter}
             onChange={(event) => {
@@ -241,17 +241,17 @@ export function HistoryPanel() {
               setPage(1)
             }}
           >
-            <option value="all">All states</option>
-            <option value="scheduled">Scheduled</option>
-            <option value="ready">Ready</option>
-            <option value="opened">Opened</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="all">Tất cả</option>
+            <option value="scheduled">Đã hẹn</option>
+            <option value="ready">Mở được</option>
+            <option value="opened">Đã mở</option>
+            <option value="cancelled">Đã huỷ</option>
           </select>
         </label>
         <label className="stacked-field grow-field">
-          Search
+          Tìm kiếm
           <input
-            placeholder="Code, recipient, message..."
+            placeholder="Mã, người nhận, nội dung..."
             type="search"
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
@@ -266,7 +266,7 @@ export function HistoryPanel() {
             }}
             type="button"
           >
-            Apply search
+            Áp dụng
           </button>
           <button
             className="phone-button ghost"
@@ -277,7 +277,7 @@ export function HistoryPanel() {
             }}
             type="button"
           >
-            Clear
+            Xoá
           </button>
           <button
             className={showArchived ? 'chip active' : 'chip'}
@@ -287,17 +287,17 @@ export function HistoryPanel() {
             }}
             type="button"
           >
-            {showArchived ? 'Hide archived' : 'Show archived'}
+            {showArchived ? 'Ẩn lưu trữ' : 'Xem lưu trữ'}
           </button>
           <button className="phone-button ghost" onClick={() => void load()} type="button">
-            Refresh
+            Làm mới
           </button>
         </div>
       </div>
 
-      {currentUser ? <p className="helper-copy">Signed in as {currentUser.email}</p> : null}
+      {currentUser ? <p className="helper-copy">Đang dùng {currentUser.email}</p> : null}
 
-      {isLoading ? <p className="feedback">Loading history...</p> : null}
+      {isLoading ? <p className="feedback">Đang tải lịch sử...</p> : null}
       {error ? <p className="feedback error">{error}</p> : null}
 
       {!isLoading && !error ? (
@@ -305,7 +305,7 @@ export function HistoryPanel() {
           {items.length === 0 ? (
             <article className="phone-card">
               <p className="feedback">
-                No amber matched the current filters.
+                Không có amber nào khớp bộ lọc hiện tại.
               </p>
             </article>
           ) : null}
@@ -334,7 +334,7 @@ export function HistoryPanel() {
                   }}
                 >
                   <label>
-                    Recipient email
+                    Email người nhận
                     <input
                       required
                       type="email"
@@ -348,7 +348,7 @@ export function HistoryPanel() {
                     />
                   </label>
                   <label>
-                    Message
+                    Nội dung
                     <textarea
                       required
                       minLength={10}
@@ -362,7 +362,7 @@ export function HistoryPanel() {
                     />
                   </label>
                   <label>
-                    Open at
+                    Mở vào lúc
                     <input
                       required
                       type="datetime-local"
@@ -376,9 +376,9 @@ export function HistoryPanel() {
                     />
                   </label>
                   <label>
-                    New passcode
+                    Mật mã mới
                     <input
-                      placeholder="Leave blank to keep current passcode"
+                      placeholder="Để trống nếu giữ nguyên mật mã"
                       type="password"
                       value={editForm.passcode}
                       onChange={(event) =>
@@ -395,7 +395,7 @@ export function HistoryPanel() {
                       disabled={savingId === item.id}
                       type="submit"
                     >
-                      {savingId === item.id ? 'Saving...' : 'Save changes'}
+                      {savingId === item.id ? 'Đang lưu...' : 'Lưu thay đổi'}
                     </button>
                     <button
                       className="phone-button ghost"
@@ -403,7 +403,7 @@ export function HistoryPanel() {
                       onClick={stopEditing}
                       type="button"
                     >
-                      Cancel edit
+                      Huỷ sửa
                     </button>
                   </div>
                 </form>
@@ -412,25 +412,25 @@ export function HistoryPanel() {
                   <p>{item.message}</p>
                   <dl className="mini-meta">
                     <div>
-                      <dt>By</dt>
-                      <dd>{item.createdBy}</dd>
-                    </div>
+                        <dt>Người tạo</dt>
+                        <dd>{item.createdBy}</dd>
+                      </div>
                     <div>
-                      <dt>Open</dt>
+                      <dt>Mở lúc</dt>
                       <dd>{formatDateTime(item.openAt)}</dd>
                     </div>
                     {item.archivedAt ? (
                       <div>
-                        <dt>Archived</dt>
+                        <dt>Lưu trữ</dt>
                         <dd>{formatDateTime(item.archivedAt)}</dd>
                       </div>
                     ) : null}
                   </dl>
                   <div className="history-mail-block">
-                    <p className="panel-tag">Delivery</p>
+                    <p className="panel-tag">Mail</p>
                     <ul className="plain-list compact history-mail-list">
                       <li>
-                        Seal confirmation: {getMailStatusCopy(item, 'amber_created', createdLog)}
+                        Mail xác nhận: {getMailStatusCopy(item, 'amber_created', createdLog)}
                         {createdLog?.status === 'failed' ? (
                           <button
                             className="phone-button ghost inline-button"
@@ -438,12 +438,12 @@ export function HistoryPanel() {
                             onClick={() => void handleRetryMailLog(createdLog)}
                             type="button"
                           >
-                            {retryingMailLogId === createdLog.id ? 'Retrying...' : 'Retry'}
+                            {retryingMailLogId === createdLog.id ? 'Đang gửi lại...' : 'Gửi lại'}
                           </button>
                         ) : null}
                       </li>
                       <li>
-                        Ready notification: {getMailStatusCopy(item, 'amber_ready', readyLog)}
+                        Thông báo mở: {getMailStatusCopy(item, 'amber_ready', readyLog)}
                         {readyLog?.status === 'failed' ? (
                           <button
                             className="phone-button ghost inline-button"
@@ -451,7 +451,7 @@ export function HistoryPanel() {
                             onClick={() => void handleRetryMailLog(readyLog)}
                             type="button"
                           >
-                            {retryingMailLogId === readyLog.id ? 'Retrying...' : 'Retry'}
+                            {retryingMailLogId === readyLog.id ? 'Đang gửi lại...' : 'Gửi lại'}
                           </button>
                         ) : null}
                       </li>
@@ -464,7 +464,7 @@ export function HistoryPanel() {
                         onClick={() => startEditing(item)}
                         type="button"
                       >
-                        Edit
+                        Sửa
                       </button>
                       <button
                         className="phone-button ghost"
@@ -472,7 +472,7 @@ export function HistoryPanel() {
                         onClick={() => void handleCancel(item)}
                         type="button"
                       >
-                        {savingId === item.id ? 'Cancelling...' : 'Cancel amber'}
+                        {savingId === item.id ? 'Đang huỷ...' : 'Huỷ amber'}
                       </button>
                     </div>
                   ) : null}
@@ -484,7 +484,7 @@ export function HistoryPanel() {
                         onClick={() => void handleArchive(item)}
                         type="button"
                       >
-                        {savingId === item.id ? 'Archiving...' : 'Archive'}
+                        {savingId === item.id ? 'Đang lưu trữ...' : 'Lưu trữ'}
                       </button>
                     </div>
                   ) : null}
@@ -498,7 +498,7 @@ export function HistoryPanel() {
           {pagination.totalPages > 1 ? (
             <div className="pagination-row">
               <p className="helper-copy">
-                Page {pagination.page} of {pagination.totalPages}
+                Trang {pagination.page} / {pagination.totalPages}
               </p>
               <div className="button-row">
                 <button
@@ -507,7 +507,7 @@ export function HistoryPanel() {
                   onClick={() => setPage((current) => Math.max(1, current - 1))}
                   type="button"
                 >
-                  Previous
+                    Trước
                 </button>
                 <button
                   className="phone-button ghost"
@@ -515,7 +515,7 @@ export function HistoryPanel() {
                   onClick={() => setPage((current) => current + 1)}
                   type="button"
                 >
-                  Next
+                    Sau
                 </button>
               </div>
             </div>

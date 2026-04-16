@@ -14,15 +14,15 @@ interface StatusPillProps {
 }
 
 const STATUS_LABELS: Record<StatusPillStatus, string> = {
-  scheduled: 'scheduled',
-  ready: 'ready',
-  opened: 'opened',
-  cancelled: 'cancelled',
-  pending: 'pending',
-  pending_review: 'review',
-  paid: 'paid',
-  approved_manual: 'manual',
-  expired: 'expired',
+  scheduled: 'đã hẹn',
+  ready: 'mở được',
+  opened: 'đã mở',
+  cancelled: 'đã huỷ',
+  pending: 'chờ thanh toán',
+  pending_review: 'cần soát',
+  paid: 'đã trả',
+  approved_manual: 'duyệt tay',
+  expired: 'hết hạn',
 }
 
 export function StatusPill({ status }: StatusPillProps) {

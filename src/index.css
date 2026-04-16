@@ -2487,3 +2487,827 @@ select:focus-visible {
     height: auto;
   }
 }
+
+.room-shell-lofi {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(255, 239, 214, 0.9), transparent 30%),
+    linear-gradient(180deg, #f7ead7 0%, #edd7bc 48%, #e1be95 100%);
+}
+
+.room-stage-lofi {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(254, 247, 238, 0.98) 0%, rgba(244, 223, 196, 0.96) 44%, rgba(214, 169, 122, 0.95) 44%, rgba(198, 149, 101, 0.98) 100%);
+}
+
+.room-stage-lofi::before,
+.room-stage-lofi::after,
+.room-shell-lofi .room-hud,
+.room-shell-lofi .room-info,
+.room-shell-lofi .room-status-strip,
+.room-shell-lofi .room-ledger,
+.room-shell-lofi .room-layout,
+.room-shell-lofi .room-layout-guest,
+.room-shell-lofi .room-window,
+.room-shell-lofi .room-shelf,
+.room-shell-lofi .room-rug,
+.room-shell-lofi .room-desk-plane,
+.room-shell-lofi .room-architecture,
+.room-shell-lofi .room-glow,
+.room-shell-lofi .room-light-cone,
+.room-shell-lofi .room-ceiling-haze {
+  display: none !important;
+}
+
+.lofi-scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.lofi-glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(36px);
+  opacity: 0.55;
+}
+
+.lofi-glow-left {
+  top: 10%;
+  left: -4%;
+  width: 340px;
+  height: 340px;
+  background: rgba(255, 203, 140, 0.7);
+}
+
+.lofi-glow-right {
+  top: 8%;
+  right: -3%;
+  width: 280px;
+  height: 280px;
+  background: rgba(255, 241, 214, 0.8);
+}
+
+.lofi-window {
+  position: absolute;
+  top: 82px;
+  right: 10%;
+  width: 280px;
+  height: 320px;
+  border-radius: 30px;
+  border: 1px solid rgba(150, 102, 60, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 250, 241, 0.96), rgba(255, 226, 189, 0.58) 46%, rgba(227, 198, 167, 0.5) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 16px 36px rgba(120, 84, 52, 0.08);
+}
+
+.lofi-window::before,
+.lofi-window::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: rgba(99, 66, 45, 0.45);
+}
+
+.lofi-window::before {
+  left: 34%;
+}
+
+.lofi-window::after {
+  right: 34%;
+}
+
+.lofi-window-light {
+  position: absolute;
+  inset: 18px;
+  border-radius: 20px;
+  background: radial-gradient(circle at 36% 30%, rgba(255, 245, 220, 0.88), rgba(255, 220, 170, 0.1) 72%);
+}
+
+.lofi-lamp {
+  position: absolute;
+  top: 76px;
+  left: 50%;
+  width: 220px;
+  height: 22px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #b88f69, #8c603f);
+  transform: translateX(-50%);
+  box-shadow: 0 10px 18px rgba(116, 79, 49, 0.12);
+}
+
+.lofi-lamp::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 240px;
+  height: 240px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(255, 220, 166, 0.34), rgba(255, 220, 166, 0) 68%);
+}
+
+.lofi-shelf {
+  position: absolute;
+  top: 138px;
+  left: 16%;
+  display: flex;
+  gap: 10px;
+}
+
+.lofi-shelf span {
+  width: 18px;
+  border-radius: 10px 10px 4px 4px;
+  background: linear-gradient(180deg, rgba(233, 189, 148, 0.9), rgba(176, 118, 76, 0.9));
+}
+
+.lofi-shelf span:nth-child(1) {
+  height: 78px;
+}
+
+.lofi-shelf span:nth-child(2) {
+  height: 58px;
+}
+
+.lofi-shelf span:nth-child(3) {
+  height: 70px;
+}
+
+.lofi-desk {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36%;
+  background:
+    linear-gradient(180deg, rgba(152, 114, 79, 0.08), rgba(102, 72, 48, 0.15)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(170, 129, 91, 0.56) 0,
+      rgba(170, 129, 91, 0.56) 90px,
+      rgba(153, 115, 80, 0.56) 90px,
+      rgba(153, 115, 80, 0.56) 102px
+    );
+  box-shadow: inset 0 8px 18px rgba(255, 255, 255, 0.08);
+}
+
+.room-grid-vn,
+.room-grid-vn-guest {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  padding: 96px 40px 34px;
+  display: grid;
+  gap: 18px;
+}
+
+.room-grid-vn {
+  grid-template-columns: 1.1fr 1.2fr 1.2fr 1fr;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "clock amber calendar phone"
+    "vinyl amber radio phone"
+    "note note radio phone";
+  align-content: center;
+}
+
+.room-grid-vn-guest {
+  grid-template-columns: 1.05fr 1.2fr 1.2fr 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "clock amber calendar phone"
+    "vinyl amber radio phone";
+  align-content: center;
+}
+
+.room-object-vn,
+.amber-tray-vn {
+  border: 1px solid rgba(150, 102, 60, 0.12);
+  border-radius: 30px;
+  background: rgba(255, 250, 243, 0.76);
+  box-shadow: 0 18px 36px rgba(109, 73, 40, 0.07);
+  backdrop-filter: blur(14px);
+}
+
+.room-object-vn {
+  min-height: 150px;
+  padding: 18px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--ease-standard),
+    box-shadow var(--ease-standard),
+    border-color var(--ease-standard);
+}
+
+.room-object-vn:hover,
+.amber-tray-vn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 40px rgba(109, 73, 40, 0.1);
+  border-color: rgba(150, 102, 60, 0.18);
+}
+
+.room-object-kicker {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(229, 204, 178, 0.5);
+  color: #8f6034;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.room-object-vn strong,
+.amber-tray-vn strong {
+  color: #4a2e19;
+  font-size: clamp(1.05rem, 1.3vw, 1.4rem);
+}
+
+.room-object-vn small,
+.amber-tray-vn small {
+  color: #7a6753;
+}
+
+.room-object-vn-clock {
+  grid-area: clock;
+}
+
+.room-object-vn-calendar {
+  grid-area: calendar;
+}
+
+.room-object-vn-vinyl {
+  grid-area: vinyl;
+  align-items: center;
+  text-align: center;
+}
+
+.room-object-vn-radio {
+  grid-area: radio;
+}
+
+.room-object-vn-note {
+  grid-area: note;
+}
+
+.room-object-vn-phone {
+  grid-area: phone;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.amber-tray-vn {
+  grid-area: amber;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.amber-tray-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.amber-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.amber-chip {
+  min-width: 118px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 20px;
+  background: rgba(255, 253, 249, 0.9);
+  color: #563826;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.amber-chip span {
+  font-size: 0.8rem;
+  color: #8a6847;
+}
+
+.amber-chip.ready {
+  background: rgba(232, 244, 227, 0.96);
+}
+
+.amber-chip.opened {
+  background: rgba(227, 232, 245, 0.96);
+}
+
+.amber-chip.cancelled {
+  background: rgba(246, 228, 228, 0.96);
+}
+
+.vinyl-mini-disc {
+  width: 82px;
+  height: 82px;
+  border-radius: 999px;
+  margin: 4px auto 8px;
+  background:
+    radial-gradient(circle, #f9d7ad 0 14%, #53392d 14% 24%, #2d1f1a 24% 48%, #7a5b4b 48% 63%, #f0d4ad 63% 100%);
+  box-shadow: 0 8px 18px rgba(88, 57, 29, 0.12);
+}
+
+.phone-mini-frame {
+  width: 108px;
+  height: 172px;
+  border-radius: 28px;
+  border: 1px solid rgba(115, 78, 48, 0.14);
+  background: linear-gradient(180deg, rgba(255, 250, 241, 0.98), rgba(249, 231, 208, 0.88));
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 12px 24px rgba(97, 64, 38, 0.08);
+}
+
+.phone-mini-frame span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  border: 7px solid rgba(94, 68, 52, 0.76);
+}
+
+.device-overlay-vn {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(74, 51, 35, 0.22);
+  backdrop-filter: blur(10px);
+  animation: overlayIn 180ms ease;
+}
+
+.device-sheet-vn {
+  width: min(880px, calc(100vw - 40px));
+  max-height: min(860px, calc(100vh - 40px));
+  overflow: auto;
+  border-radius: 34px;
+  border: 1px solid rgba(139, 94, 57, 0.12);
+  background: linear-gradient(180deg, rgba(255, 251, 246, 0.98), rgba(247, 235, 219, 0.96));
+  box-shadow: 0 30px 70px rgba(59, 37, 24, 0.16);
+}
+
+.device-sheet-vn-note {
+  width: min(1080px, calc(100vw - 40px));
+}
+
+.device-sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px 0;
+}
+
+.device-sheet-head h3 {
+  margin: 6px 0 0;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: #432818;
+}
+
+.device-sheet-body {
+  padding: 20px 24px 24px;
+}
+
+.device-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.device-panel-note {
+  gap: 20px;
+}
+
+.clock-device {
+  padding: 28px;
+  border-radius: 30px;
+  background: rgba(255, 249, 239, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.clock-display {
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: clamp(2.4rem, 4vw, 4rem);
+  color: #5f3921;
+}
+
+.clock-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #6c5847;
+}
+
+.clock-meta strong {
+  font-size: 1.1rem;
+}
+
+.vinyl-device {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.vinyl-device-disc {
+  width: 180px;
+  height: 180px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, #f9d7ad 0 10%, #53392d 10% 18%, #2d1f1a 18% 46%, #7a5b4b 46% 60%, #f0d4ad 60% 100%);
+  box-shadow: 0 16px 30px rgba(88, 57, 29, 0.14);
+}
+
+.vinyl-device-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vinyl-device-meta strong {
+  font-size: 1.5rem;
+  color: #4f2e1b;
+}
+
+.track-list {
+  display: grid;
+  gap: 10px;
+}
+
+.track-row {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid rgba(139, 94, 57, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 252, 247, 0.86);
+  text-align: left;
+  cursor: pointer;
+}
+
+.track-row.active {
+  border-color: rgba(169, 93, 45, 0.28);
+  background: rgba(255, 245, 232, 0.96);
+}
+
+.radio-device {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 28px;
+  background: rgba(255, 249, 240, 0.86);
+}
+
+.radio-frequency-display {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.radio-frequency-display strong {
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 2.6rem;
+  color: #5f3921;
+}
+
+.calendar-device-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.calendar-device-head h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  color: #4a2e19;
+}
+
+.calendar-weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.calendar-weekdays span {
+  text-align: center;
+  color: #8f6034;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.calendar-cell {
+  min-height: 66px;
+  border: 1px solid rgba(150, 102, 60, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 252, 247, 0.86);
+  color: #593927;
+  cursor: pointer;
+}
+
+.calendar-cell.active {
+  background: rgba(255, 240, 218, 0.96);
+  border-color: rgba(169, 93, 45, 0.24);
+}
+
+.calendar-cell.muted {
+  opacity: 0.45;
+}
+
+.calendar-message-card {
+  background: linear-gradient(180deg, rgba(255, 250, 243, 0.95), rgba(248, 236, 220, 0.95));
+}
+
+.note-device {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 18px;
+  min-height: 520px;
+}
+
+.note-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 28px;
+  background: rgba(255, 249, 239, 0.88);
+}
+
+.note-entry-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: auto;
+}
+
+.note-entry-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid rgba(139, 94, 57, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 252, 247, 0.9);
+  text-align: left;
+  cursor: pointer;
+}
+
+.note-entry-item.active {
+  border-color: rgba(169, 93, 45, 0.24);
+  background: rgba(255, 242, 225, 0.94);
+}
+
+.note-entry-item small {
+  color: #8a6a4f;
+}
+
+.note-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.note-paper {
+  min-height: 520px;
+  padding: 20px 24px;
+  border-radius: 30px;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 247, 0.96), rgba(246, 237, 222, 0.96)),
+    repeating-linear-gradient(180deg, transparent, transparent 34px, rgba(194, 154, 118, 0.16) 34px, rgba(194, 154, 118, 0.16) 35px);
+  border: 1px solid rgba(150, 102, 60, 0.12);
+}
+
+.note-paper-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.note-textarea {
+  width: 100%;
+  min-height: 400px;
+  border: none;
+  background: transparent;
+  color: #4b3020;
+  resize: vertical;
+  line-height: 1.9;
+}
+
+.note-textarea:focus-visible {
+  box-shadow: none;
+}
+
+.phone-overlay-vn {
+  z-index: 40;
+}
+
+.smartphone-shell {
+  width: min(440px, calc(100vw - 28px));
+  height: min(860px, calc(100vh - 28px));
+  border-radius: 42px;
+  padding: 10px;
+  background: linear-gradient(160deg, #2f241f, #6a4a36);
+  box-shadow: 0 36px 72px rgba(33, 22, 17, 0.32);
+  animation: phoneIn 180ms ease;
+}
+
+.smartphone-notch {
+  width: 132px;
+  height: 26px;
+  margin: 4px auto 0;
+  border-radius: 0 0 18px 18px;
+  background: rgba(24, 17, 14, 0.92);
+}
+
+.smartphone-screen {
+  height: calc(100% - 34px);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top, rgba(255, 244, 226, 0.82), transparent 28%),
+    linear-gradient(180deg, rgba(255, 249, 240, 0.98), rgba(243, 226, 202, 0.98));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.smartphone-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px 6px;
+  color: #f7ede0;
+  font-size: 0.8rem;
+}
+
+.smartphone-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 18px 0;
+}
+
+.smartphone-head h3 {
+  margin: 6px 0 0;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: #482b18;
+}
+
+.room-shell-lofi .phone-home-screen {
+  min-height: 100%;
+  padding: 4px 0 12px;
+}
+
+.room-shell-lofi .phone-home-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.room-shell-lofi .phone-app-icon {
+  min-height: 150px;
+  border-radius: 26px;
+  background: rgba(255, 252, 247, 0.82);
+}
+
+.room-shell-lofi .phone-app-icon-badge {
+  min-width: 58px;
+  min-height: 58px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(200, 134, 78, 0.95), rgba(128, 78, 42, 0.95));
+}
+
+.subtle-inline-link {
+  color: #7d4c28;
+  font-weight: 700;
+}
+
+@media (max-width: 1080px) {
+  .lofi-window {
+    right: 26px;
+    width: 240px;
+    height: 280px;
+  }
+
+  .room-grid-vn,
+  .room-grid-vn-guest {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+      "clock amber calendar"
+      "vinyl amber radio"
+      "note phone phone"
+      ". . .";
+  }
+
+  .room-grid-vn-guest {
+    grid-template-areas:
+      "clock amber calendar"
+      "vinyl amber radio"
+      "phone phone phone"
+      ". . .";
+  }
+
+  .note-device,
+  .vinyl-device {
+    grid-template-columns: 1fr;
+  }
+
+  .vinyl-device-disc {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 860px) {
+  .lofi-window,
+  .lofi-shelf {
+    display: none;
+  }
+
+  .room-grid-vn,
+  .room-grid-vn-guest {
+    padding: 90px 16px 24px;
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-template-areas: none;
+  }
+
+  .room-object-vn,
+  .amber-tray-vn,
+  .room-object-vn-clock,
+  .room-object-vn-calendar,
+  .room-object-vn-vinyl,
+  .room-object-vn-radio,
+  .room-object-vn-note,
+  .room-object-vn-phone {
+    grid-area: auto;
+  }
+
+  .amber-tray-head,
+  .calendar-device-head,
+  .smartphone-head,
+  .device-sheet-head,
+  .clock-device {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .device-overlay-vn {
+    padding: 12px;
+  }
+
+  .device-sheet-vn,
+  .device-sheet-vn-note,
+  .smartphone-shell {
+    width: 100%;
+    max-height: calc(100vh - 24px);
+  }
+
+  .note-device,
+  .room-shell-lofi .phone-home-grid {
+    grid-template-columns: 1fr;
+  }
+}

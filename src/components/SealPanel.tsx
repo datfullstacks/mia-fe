@@ -27,7 +27,7 @@ export function SealPanel() {
 
     try {
       if (!token) {
-        throw new Error('Login is required to create amber')
+        throw new Error('Bạn cần đăng nhập để tạo amber')
       }
 
       const response = await createAmber(token, {
@@ -38,7 +38,7 @@ export function SealPanel() {
       })
 
       const nextOpenAt = createInitialOpenAt()
-      setResult(`Created ${response.item.code} for ${response.item.recipientEmail}`)
+      setResult(`Đã tạo ${response.item.code} cho ${response.item.recipientEmail}`)
       setForm({
         recipientEmail: '',
         message: '',
@@ -48,7 +48,7 @@ export function SealPanel() {
       await refreshSession()
       notifyAmbersChanged()
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : 'Failed to create amber')
+      setError(nextError instanceof Error ? nextError.message : 'Không thể tạo amber')
     } finally {
       setIsSubmitting(false)
     }
@@ -58,23 +58,23 @@ export function SealPanel() {
     <div className="phone-panel">
       <div className="panel-heading">
         <p className="panel-tag">Seal</p>
-        <h3>Seal a new amber</h3>
+        <h3>Tạo amber mới</h3>
       </div>
 
       {currentUser ? (
         <div className="seal-quota-copy">
-          <p className="helper-copy">Signed in as {currentUser.name}</p>
+          <p className="helper-copy">Đang dùng với tài khoản {currentUser.name}</p>
           <p className="helper-copy">
-            Remaining amber: {currentUser.amberQuota.remainingCredits} / {currentUser.amberQuota.totalCredits}
+            Còn lại: {currentUser.amberQuota.remainingCredits} / {currentUser.amberQuota.totalCredits} amber
           </p>
         </div>
       ) : (
-        <p className="feedback error">Login is required to use Seal.</p>
+        <p className="feedback error">Bạn cần đăng nhập để dùng chức năng tạo amber.</p>
       )}
 
       <form className="phone-form" onSubmit={handleSubmit}>
         <label>
-          Recipient email
+          Email người nhận
           <input
             required
             type="email"
@@ -86,7 +86,7 @@ export function SealPanel() {
         </label>
 
         <label>
-          Message
+          Nội dung
           <textarea
             required
             minLength={10}
@@ -98,7 +98,7 @@ export function SealPanel() {
         </label>
 
         <label>
-          Open at
+          Mở vào lúc
           <input
             required
             type="datetime-local"
@@ -110,7 +110,7 @@ export function SealPanel() {
         </label>
 
         <label>
-          Passcode
+          Mật mã mở
           <input
             required
             minLength={4}
@@ -127,7 +127,7 @@ export function SealPanel() {
           disabled={isSubmitting || !currentUser || currentUser.amberQuota.remainingCredits < 1}
           type="submit"
         >
-          {isSubmitting ? 'Sealing...' : 'Seal amber'}
+          {isSubmitting ? 'Đang niêm phong...' : 'Tạo amber'}
         </button>
       </form>
 
