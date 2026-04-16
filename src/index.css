@@ -3311,3 +3311,215 @@ select:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+.lofi-poster {
+  position: absolute;
+  top: 122px;
+  width: 132px;
+  height: 170px;
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 248, 236, 0.9), rgba(241, 215, 182, 0.86)),
+    radial-gradient(circle at 30% 24%, rgba(223, 174, 118, 0.32), transparent 46%);
+  box-shadow: 0 12px 24px rgba(105, 72, 45, 0.08);
+}
+
+.lofi-poster-left {
+  left: 12%;
+}
+
+.lofi-poster-right {
+  left: 28%;
+}
+
+.lofi-plant {
+  position: absolute;
+  right: 18%;
+  bottom: 27%;
+  width: 110px;
+  height: 140px;
+  border-radius: 60px 60px 24px 24px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(118, 152, 97, 0.5), transparent 40%),
+    linear-gradient(180deg, rgba(215, 189, 157, 0), rgba(125, 95, 72, 0.2));
+}
+
+.amber-action-row,
+.compact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.amber-tray-vn .phone-button,
+.compact-actions .phone-button,
+.calendar-device-head .phone-button,
+.smartphone-toolbar .icon-button,
+.device-sheet-topbar .icon-button {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+.device-sheet-topbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 16px 0;
+}
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 247, 236, 0.92);
+  color: #6d4324;
+  font-size: 1.55rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 18px rgba(96, 62, 36, 0.08);
+}
+
+.icon-button.ghost-space {
+  visibility: hidden;
+}
+
+.device-panel-surface {
+  border-radius: 28px;
+  background: rgba(255, 252, 247, 0.92);
+  padding: 16px;
+}
+
+.device-mode-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mode-chip {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: rgba(232, 211, 186, 0.56);
+  color: #704726;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mode-chip.active {
+  background: linear-gradient(140deg, #c37b45, #8e5530);
+  color: #fff5eb;
+}
+
+.amber-device-panel .phone-panel,
+.amber-device-panel .phone-card,
+.amber-device-panel .panel-heading h3 {
+  background: transparent;
+}
+
+.smartphone-shell {
+  width: min(390px, calc(100vw - 24px));
+  height: min(812px, calc(100vh - 24px));
+  padding: 10px;
+  border-radius: 40px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #2f221c, #5b3b2b);
+}
+
+.smartphone-screen {
+  height: 100%;
+  border-radius: 32px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top, rgba(255, 240, 219, 0.3), transparent 28%),
+    linear-gradient(180deg, rgba(255, 248, 238, 0.98), rgba(241, 223, 198, 0.98));
+}
+
+.smartphone-statusbar {
+  padding: 12px 16px 6px;
+  color: #6f4729;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.smartphone-status-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.smartphone-status-icons span {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #6f4729;
+}
+
+.smartphone-toolbar {
+  padding: 0 16px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.phone-app-body-vn {
+  height: calc(100% - 68px);
+  padding: 0 12px 12px;
+  overflow: auto;
+}
+
+.phone-home-screen-vn {
+  min-height: 100%;
+  padding: 10px 4px 18px;
+}
+
+.phone-home-grid-vn {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.phone-app-icon-vn {
+  min-height: 132px;
+  padding: 14px;
+}
+
+.phone-app-icon-vn strong {
+  font-size: 0.98rem;
+}
+
+.phone-app-icon-vn small {
+  font-size: 0.8rem;
+}
+
+.room-grid-vn {
+  grid-template-columns: minmax(170px, 220px) minmax(260px, 360px) minmax(170px, 220px) minmax(180px, 220px);
+  justify-content: center;
+}
+
+.room-grid-vn-guest {
+  grid-template-columns: minmax(170px, 220px) minmax(260px, 360px) minmax(170px, 220px) minmax(180px, 220px);
+  justify-content: center;
+}
+
+.room-object-vn {
+  min-height: 136px;
+}
+
+.amber-tray-vn {
+  max-width: 360px;
+}
+
+.room-object-vn-note {
+  max-width: 460px;
+}
+
+@media (max-width: 1080px) {
+  .room-grid-vn,
+  .room-grid-vn-guest {
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+  }
+}

@@ -1,12 +1,11 @@
 import { useAuth } from '../lib/auth'
 
 interface AmberPanelProps {
-  onOpenSeal: () => void
   onOpenHistory: () => void
   onOpenPricing: () => void
 }
 
-export function AmberPanel({ onOpenSeal, onOpenHistory, onOpenPricing }: AmberPanelProps) {
+export function AmberPanel({ onOpenHistory, onOpenPricing }: AmberPanelProps) {
   const { currentUser } = useAuth()
 
   if (!currentUser) {
@@ -58,13 +57,11 @@ export function AmberPanel({ onOpenSeal, onOpenHistory, onOpenPricing }: AmberPa
         </div>
         <p>
           Tài khoản mới có sẵn 3 amber miễn phí. Mỗi lần niêm phong một amber mới sẽ trừ 1 lượt.
-          Khi hết lượt, bạn chỉ cần mua thêm gói amber.
+          Khi hết lượt, bạn chỉ cần mua thêm gói amber. Chức năng lưu và mở amber nằm ở cụm hổ
+          phách trong căn phòng.
         </p>
         <div className="button-row">
-          <button className="phone-button primary" onClick={onOpenSeal} type="button">
-            Tạo amber
-          </button>
-          <button className="phone-button ghost" onClick={onOpenHistory} type="button">
+          <button className="phone-button primary" onClick={onOpenHistory} type="button">
             Xem lịch sử
           </button>
           <button className="phone-button ghost" onClick={onOpenPricing} type="button">
