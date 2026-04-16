@@ -489,8 +489,9 @@ export function RoomPage() {
             <small>{currentUser ? 'Seal, history, pricing' : 'Guest unlock'}</small>
           </button>
 
-          <aside className={isGuest ? 'room-info room-info-guest' : 'room-info'}>
-            {!activeObject ? (
+          {!isGuest || activeObject ? (
+            <aside className={isGuest ? 'room-info room-info-guest' : 'room-info'}>
+              {!activeObject ? (
               <div className={isGuest ? 'room-info-card room-info-card-intro room-info-card-guest' : 'room-info-card room-info-card-intro'}>
                 <p className="panel-tag">Room reading</p>
                 <h3>{currentUser ? 'The room leads' : 'Guest-safe ambient mode'}</h3>
@@ -500,17 +501,17 @@ export function RoomPage() {
                     : 'Explore the room, then open Unseal from the phone.'}
                 </p>
               </div>
-            ) : null}
+              ) : null}
 
-            {activeObject === 'clock' ? (
+              {activeObject === 'clock' ? (
               <div className="room-info-card">
                 <p className="panel-tag">Clock</p>
                 <h3>{formatClock(clock)}</h3>
                 <p>The room clock is live, and the lighting shifts with it. MIA should always feel aware of time, not static.</p>
               </div>
-            ) : null}
+              ) : null}
 
-            {activeObject === 'vinyl' ? (
+              {activeObject === 'vinyl' ? (
               <div className="room-info-card">
                 <p className="panel-tag">Vinyl player</p>
                 <h3>Lo-fi track list</h3>
@@ -527,9 +528,9 @@ export function RoomPage() {
                   {vinylPlaying ? 'Pause ambience' : 'Spin ambience'}
                 </button>
               </div>
-            ) : null}
+              ) : null}
 
-            {activeObject === 'radio' ? (
+              {activeObject === 'radio' ? (
               <div className="room-info-card">
                 <p className="panel-tag">Radio</p>
                 <h3>Ambient channels</h3>
@@ -547,17 +548,17 @@ export function RoomPage() {
                   ))}
                 </div>
               </div>
-            ) : null}
+              ) : null}
 
-            {activeObject === 'calendar' ? (
+              {activeObject === 'calendar' ? (
               <div className="room-info-card">
                 <p className="panel-tag">Calendar</p>
                 <h3>{longDate}</h3>
                 <p>{quotes[clock.getDate() % quotes.length]}</p>
               </div>
-            ) : null}
+              ) : null}
 
-            {activeObject === 'diary' ? (
+              {activeObject === 'diary' ? (
               <div className="room-info-card">
                 <p className="panel-tag">Diary</p>
                 <h3>Quick note</h3>
@@ -569,9 +570,9 @@ export function RoomPage() {
                   onChange={(event) => setDiaryNote(event.target.value)}
                 />
               </div>
-            ) : null}
+              ) : null}
 
-            {activeObject === 'amber' ? (
+              {activeObject === 'amber' ? (
               <div className="room-info-card">
                 <p className="panel-tag">Amber archive</p>
                 {activeAmber ? (
@@ -611,8 +612,9 @@ export function RoomPage() {
                   </>
                 )}
               </div>
-            ) : null}
-          </aside>
+              ) : null}
+            </aside>
+          ) : null}
 
           <div className="room-status-strip">
             <span>{formatClock(clock)}</span>

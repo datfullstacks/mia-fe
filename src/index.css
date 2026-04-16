@@ -761,6 +761,22 @@ select:focus-visible {
     "status status status status status";
 }
 
+.room-layout-guest .object-clock {
+  width: min(100%, 164px);
+}
+
+.room-layout-guest .object-calendar {
+  width: min(100%, 176px);
+}
+
+.room-layout-guest .object-radio {
+  width: min(100%, 176px);
+}
+
+.room-layout-guest .object-phone {
+  width: min(100%, 208px);
+}
+
 .room-ledger {
   grid-area: ledger;
   display: flex;
@@ -780,8 +796,16 @@ select:focus-visible {
 
 .room-ledger-guest {
   align-self: start;
-  max-width: 520px;
-  padding: 22px 24px;
+  max-width: 460px;
+  padding: 18px 20px;
+}
+
+.room-ledger-guest h2 {
+  font-size: clamp(2rem, 3vw, 3rem);
+}
+
+.room-ledger-guest p {
+  max-width: 26ch;
 }
 
 .room-amber-cluster {
