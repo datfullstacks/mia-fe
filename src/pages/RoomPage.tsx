@@ -164,6 +164,11 @@ function getAmberInfoCopy(amber: Amber, nowMs: number) {
   return 'This amber was cancelled before it could open. It remains part of the room archive, but no longer active.'
 }
 
+function getAmberNodeTitle(amber: Amber) {
+  const localPart = amber.recipientEmail.split('@')[0] || amber.recipientEmail
+  return localPart.length > 12 ? `${localPart.slice(0, 12)}…` : localPart
+}
+
 export function RoomPage() {
   const { currentUser, token } = useAuth()
   const [searchParams] = useSearchParams()
@@ -388,19 +393,23 @@ export function RoomPage() {
             <small>{clock.toLocaleDateString()}</small>
           </button>
 
-          <section className="room-amber-cluster">
+          <section
+            className={
+              currentUser ? 'room-amber-cluster' : 'room-amber-cluster room-amber-cluster-guest'
+            }
+          >
             <div className="room-amber-cluster-head">
               <div>
                 <p className="panel-tag">Amber archive</p>
-                <h3>{currentUser ? 'Live ambers in the room' : 'Amber presence'}</h3>
+                <h3>{currentUser ? 'Amber tray' : 'Guest path'}</h3>
               </div>
               {currentUser ? (
                 <button className="phone-button ghost" onClick={() => openPhone('history')} type="button">
-                  Open history
+                  History
                 </button>
               ) : (
                 <button className="phone-button ghost" onClick={() => openPhone('unseal')} type="button">
-                  Open unseal
+                  Unseal
                 </button>
               )}
             </div>
@@ -425,14 +434,14 @@ export function RoomPage() {
                         >
                           <span className="amber-node-glow" />
                           <span className="amber-node-code">{amber.code}</span>
-                          <strong>{amber.recipientEmail}</strong>
+                          <strong>{getAmberNodeTitle(amber)}</strong>
                           <small>{getAmberAmbientCopy(amber, clock.getTime())}</small>
                         </button>
                       ))}
                     </div>
                   ) : (
                     <div className="room-amber-empty">
-                      <p>No active amber in the room yet.</p>
+                      <p>No live amber on the desk yet.</p>
                       <button className="phone-button ghost" onClick={() => openPhone('seal')} type="button">
                         Seal your first amber
                       </button>
@@ -442,7 +451,7 @@ export function RoomPage() {
               </>
             ) : (
               <div className="room-amber-empty">
-                <p>Guest mode can feel the room, but only the unseal path is active.</p>
+                <p>Guest mode keeps only the unseal path active.</p>
                 <button className="phone-button ghost" onClick={() => openPhone('unseal')} type="button">
                   Open unseal
                 </button>
@@ -477,13 +486,13 @@ export function RoomPage() {
 
           <aside className="room-info">
             {!activeObject ? (
-              <div className="room-info-card">
+              <div className="room-info-card room-info-card-intro">
                 <p className="panel-tag">Room reading</p>
-                <h3>{currentUser ? 'The room leads, the phone follows' : 'Guest-safe ambient mode'}</h3>
+                <h3>{currentUser ? 'The room leads' : 'Guest-safe ambient mode'}</h3>
                 <p>
                   {currentUser
-                    ? 'When MIA opens, it should feel like stepping into a place first. The phone stays inside the space, not above it.'
-                    : 'You can move through the room, read the ambience, and open the phone into Unseal. Sign in at the gate to open the rest.'}
+                    ? 'Select a room object or an amber on the tray. The phone stays as the operational layer, not the whole scene.'
+                    : 'Explore the room, then open the phone into Unseal. Sign in at the gate to unlock the rest.'}
                 </p>
               </div>
             ) : null}
