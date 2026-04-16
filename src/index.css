@@ -1950,15 +1950,15 @@ select:focus-visible {
 .room-shell {
   perspective: none;
   background:
-    radial-gradient(circle at top, rgba(255, 239, 215, 0.8), transparent 34%),
-    linear-gradient(180deg, #f3e7d7 0%, #ead7c1 42%, #dcc0a3 100%);
+    radial-gradient(circle at top, rgba(255, 245, 228, 0.88), transparent 36%),
+    linear-gradient(180deg, #f8efe4 0%, #f0e0ce 44%, #e6cbb0 100%);
 }
 
 .room-stage {
   perspective: none;
   transform-style: flat;
   background:
-    linear-gradient(180deg, #f7edde 0%, #ecd6bc 22%, #e3c5a7 54%, #d1ac86 54%, #c89d74 100%);
+    linear-gradient(180deg, #fbf2e7 0%, #f2dfc9 22%, #ead0b1 54%, #dfbb94 54%, #d6ab80 100%);
 }
 
 .room-stage::before {
@@ -1968,13 +1968,13 @@ select:focus-visible {
 .room-stage::after {
   height: 28%;
   background:
-    linear-gradient(180deg, rgba(159, 119, 83, 0), rgba(116, 83, 55, 0.12)),
+    linear-gradient(180deg, rgba(159, 119, 83, 0), rgba(116, 83, 55, 0.08)),
     repeating-linear-gradient(
       90deg,
-      rgba(168, 130, 92, 0.44) 0,
-      rgba(168, 130, 92, 0.44) 94px,
-      rgba(144, 109, 75, 0.4) 94px,
-      rgba(144, 109, 75, 0.4) 106px
+      rgba(181, 147, 113, 0.32) 0,
+      rgba(181, 147, 113, 0.32) 94px,
+      rgba(157, 124, 92, 0.28) 94px,
+      rgba(157, 124, 92, 0.28) 106px
     );
 }
 
@@ -1994,11 +1994,11 @@ select:focus-visible {
   border-radius: 36px;
   transform: none;
   background:
-    linear-gradient(180deg, rgba(187, 147, 108, 0.2), rgba(135, 98, 65, 0.14)),
-    radial-gradient(circle at center, rgba(255, 246, 233, 0.18), transparent 72%);
+    linear-gradient(180deg, rgba(205, 171, 136, 0.16), rgba(156, 121, 89, 0.1)),
+    radial-gradient(circle at center, rgba(255, 249, 239, 0.24), transparent 72%);
   box-shadow:
     inset 0 1px 0 rgba(255, 250, 242, 0.34),
-    0 22px 40px rgba(102, 71, 43, 0.08);
+    0 18px 34px rgba(102, 71, 43, 0.05);
 }
 
 .room-light-cone,
@@ -2007,7 +2007,7 @@ select:focus-visible {
 }
 
 .room-glow {
-  opacity: 0.38;
+  opacity: 0.28;
   filter: blur(24px);
 }
 
@@ -2020,7 +2020,7 @@ select:focus-visible {
   border-radius: 28px;
   border-color: rgba(255, 236, 214, 0.36);
   box-shadow:
-    0 18px 36px rgba(202, 159, 108, 0.12),
+    0 14px 28px rgba(202, 159, 108, 0.08),
     inset 0 0 22px rgba(255, 255, 255, 0.2);
 }
 
@@ -2030,7 +2030,7 @@ select:focus-visible {
   width: 240px;
   height: 34px;
   transform: none;
-  box-shadow: 0 10px 22px rgba(105, 74, 48, 0.12);
+  box-shadow: 0 8px 18px rgba(105, 74, 48, 0.08);
 }
 
 .room-rug {
@@ -2040,7 +2040,7 @@ select:focus-visible {
   height: 16%;
   transform: none;
   background:
-    linear-gradient(180deg, rgba(188, 143, 108, 0.22), rgba(166, 120, 86, 0.18));
+    linear-gradient(180deg, rgba(201, 162, 127, 0.16), rgba(174, 134, 100, 0.12));
   box-shadow: none;
 }
 
@@ -2098,8 +2098,8 @@ select:focus-visible {
   padding: 24px 26px;
   border-radius: 28px;
   border: 1px solid rgba(164, 120, 83, 0.12);
-  background: rgba(255, 250, 243, 0.68);
-  box-shadow: 0 14px 28px rgba(118, 83, 50, 0.08);
+  background: rgba(255, 252, 247, 0.8);
+  box-shadow: 0 12px 22px rgba(118, 83, 50, 0.05);
 }
 
 .room-ledger h2 {
@@ -2124,7 +2124,7 @@ select:focus-visible {
 }
 
 .room-ledger-meta div {
-  background: rgba(255, 249, 240, 0.74);
+  background: rgba(255, 250, 243, 0.88);
 }
 
 .room-amber-cluster {
@@ -2134,8 +2134,8 @@ select:focus-visible {
   padding: 18px;
   border-radius: 26px;
   border: 1px solid rgba(164, 120, 83, 0.12);
-  background: rgba(255, 249, 240, 0.62);
-  box-shadow: 0 14px 28px rgba(118, 83, 50, 0.08);
+  background: rgba(255, 251, 244, 0.74);
+  box-shadow: 0 12px 22px rgba(118, 83, 50, 0.05);
 }
 
 .room-amber-cluster::before,
@@ -2162,8 +2162,8 @@ select:focus-visible {
   min-height: 104px;
   padding: 12px 14px;
   border-radius: 18px;
-  background: rgba(255, 252, 248, 0.9);
-  box-shadow: 0 10px 20px rgba(120, 82, 49, 0.06);
+  background: rgba(255, 253, 250, 0.96);
+  box-shadow: 0 8px 16px rgba(120, 82, 49, 0.04);
 }
 
 .amber-node:hover {
@@ -2173,7 +2173,7 @@ select:focus-visible {
 .amber-node.active {
   box-shadow:
     0 0 0 1px rgba(245, 214, 176, 0.6),
-    0 12px 22px rgba(120, 82, 49, 0.1);
+    0 10px 18px rgba(120, 82, 49, 0.07);
 }
 
 .room-object {
@@ -2181,8 +2181,8 @@ select:focus-visible {
   padding: 18px;
   border-radius: 24px;
   border: 1px solid rgba(164, 120, 83, 0.12);
-  background: rgba(255, 250, 243, 0.72);
-  box-shadow: 0 14px 24px rgba(118, 83, 50, 0.08);
+  background: rgba(255, 252, 247, 0.82);
+  box-shadow: 0 12px 20px rgba(118, 83, 50, 0.05);
   align-items: flex-start;
   justify-content: space-between;
   text-align: left;
@@ -2241,9 +2241,9 @@ select:focus-visible {
   min-height: 100%;
   padding: 18px;
   border-radius: 24px;
-  background: rgba(255, 250, 243, 0.66);
+  background: rgba(255, 252, 247, 0.76);
   border: 1px solid rgba(164, 120, 83, 0.12);
-  box-shadow: 0 14px 28px rgba(118, 83, 50, 0.06);
+  box-shadow: 0 12px 22px rgba(118, 83, 50, 0.05);
 }
 
 .room-info-card-intro,
@@ -2258,14 +2258,14 @@ select:focus-visible {
 .room-status-strip {
   min-height: 50px;
   border-radius: 20px;
-  background: rgba(255, 248, 240, 0.84);
-  box-shadow: 0 10px 18px rgba(118, 83, 50, 0.06);
+  background: rgba(255, 250, 243, 0.92);
+  box-shadow: 0 8px 16px rgba(118, 83, 50, 0.04);
 }
 
 .phone-overlay {
   inset: 0;
   padding: 32px;
-  background: rgba(86, 60, 39, 0.18);
+  background: rgba(86, 60, 39, 0.1);
 }
 
 .phone-window {
