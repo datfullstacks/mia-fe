@@ -193,6 +193,13 @@ export function RoomPage() {
     <div className="room-shell">
       <section className={`room-stage stage-${timeSegment}`}>
         <div className="room-atmosphere" aria-hidden="true">
+          <div className="room-architecture">
+            <div className="room-back-wall" />
+            <div className="room-side-wall room-side-wall-left" />
+            <div className="room-side-wall room-side-wall-right" />
+            <div className="room-floor-plane" />
+            <div className="room-desk-plane" />
+          </div>
           <div className="room-glow room-glow-primary" />
           <div className="room-glow room-glow-secondary" />
           <div className="room-ceiling-haze" />
