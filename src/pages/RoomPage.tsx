@@ -166,7 +166,7 @@ function getAmberInfoCopy(amber: Amber, nowMs: number) {
 
 function getAmberNodeTitle(amber: Amber) {
   const localPart = amber.recipientEmail.split('@')[0] || amber.recipientEmail
-  return localPart.length > 12 ? `${localPart.slice(0, 12)}…` : localPart
+  return localPart.length > 12 ? `${localPart.slice(0, 12)}...` : localPart
 }
 
 export function RoomPage() {
@@ -491,8 +491,8 @@ export function RoomPage() {
                 <h3>{currentUser ? 'The room leads' : 'Guest-safe ambient mode'}</h3>
                 <p>
                   {currentUser
-                    ? 'Select a room object or an amber on the tray. The phone stays as the operational layer, not the whole scene.'
-                    : 'Explore the room, then open the phone into Unseal. Sign in at the gate to unlock the rest.'}
+                    ? 'Select a room object or tap an amber on the tray.'
+                    : 'Explore the room, then open Unseal from the phone.'}
                 </p>
               </div>
             ) : null}
