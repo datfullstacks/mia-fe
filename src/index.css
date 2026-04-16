@@ -1946,3 +1946,438 @@ select:focus-visible {
     display: grid;
   }
 }
+
+.room-shell {
+  perspective: none;
+  background:
+    radial-gradient(circle at top, rgba(255, 239, 215, 0.8), transparent 34%),
+    linear-gradient(180deg, #f3e7d7 0%, #ead7c1 42%, #dcc0a3 100%);
+}
+
+.room-stage {
+  perspective: none;
+  transform-style: flat;
+  background:
+    linear-gradient(180deg, #f7edde 0%, #ecd6bc 22%, #e3c5a7 54%, #d1ac86 54%, #c89d74 100%);
+}
+
+.room-stage::before {
+  opacity: 0.3;
+}
+
+.room-stage::after {
+  height: 28%;
+  background:
+    linear-gradient(180deg, rgba(159, 119, 83, 0), rgba(116, 83, 55, 0.12)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(168, 130, 92, 0.44) 0,
+      rgba(168, 130, 92, 0.44) 94px,
+      rgba(144, 109, 75, 0.4) 94px,
+      rgba(144, 109, 75, 0.4) 106px
+    );
+}
+
+.room-architecture,
+.room-back-wall,
+.room-side-wall,
+.room-floor-plane {
+  display: none;
+}
+
+.room-desk-plane {
+  display: block;
+  left: 10%;
+  right: 10%;
+  bottom: 7%;
+  height: 14%;
+  border-radius: 36px;
+  transform: none;
+  background:
+    linear-gradient(180deg, rgba(187, 147, 108, 0.2), rgba(135, 98, 65, 0.14)),
+    radial-gradient(circle at center, rgba(255, 246, 233, 0.18), transparent 72%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 250, 242, 0.34),
+    0 22px 40px rgba(102, 71, 43, 0.08);
+}
+
+.room-light-cone,
+.room-ceiling-haze {
+  display: none;
+}
+
+.room-glow {
+  opacity: 0.38;
+  filter: blur(24px);
+}
+
+.room-window {
+  top: 86px;
+  right: 16%;
+  width: 280px;
+  height: 288px;
+  transform: none;
+  border-radius: 28px;
+  border-color: rgba(255, 236, 214, 0.36);
+  box-shadow:
+    0 18px 36px rgba(202, 159, 108, 0.12),
+    inset 0 0 22px rgba(255, 255, 255, 0.2);
+}
+
+.room-shelf {
+  top: 88px;
+  left: 40%;
+  width: 240px;
+  height: 34px;
+  transform: none;
+  box-shadow: 0 10px 22px rgba(105, 74, 48, 0.12);
+}
+
+.room-rug {
+  left: 16%;
+  right: 16%;
+  bottom: 6%;
+  height: 16%;
+  transform: none;
+  background:
+    linear-gradient(180deg, rgba(188, 143, 108, 0.22), rgba(166, 120, 86, 0.18));
+  box-shadow: none;
+}
+
+.room-layout,
+.room-layout-guest {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  height: 100%;
+  min-height: 0;
+  padding: 114px 28px 28px;
+  gap: 16px;
+  transform-style: flat;
+  align-items: stretch;
+}
+
+.room-layout {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: auto auto minmax(136px, 1fr) minmax(136px, 1fr) auto;
+  grid-template-areas:
+    "ledger ledger amber info info"
+    "ledger ledger amber info info"
+    "clock vinyl calendar radio phone"
+    "clock diary diary radio phone"
+    "status status status status status";
+}
+
+.room-layout-guest {
+  grid-template-columns: minmax(48px, 0.35fr) repeat(4, minmax(0, 1fr)) minmax(48px, 0.35fr);
+  grid-template-rows: auto auto minmax(144px, 1fr) auto;
+  grid-template-areas:
+    ". ledger ledger calendar info ."
+    ". amber amber amber info ."
+    ". clock vinyl radio phone ."
+    "status status status status status status";
+}
+
+.room-layout > *,
+.room-layout-guest > * {
+  min-width: 0;
+}
+
+.room-ledger,
+.room-amber-cluster,
+.room-status-strip,
+.room-object,
+.room-info,
+.phone-overlay,
+.phone-window {
+  transform: none !important;
+  transform-style: flat;
+}
+
+.room-ledger {
+  padding: 24px 26px;
+  border-radius: 28px;
+  border: 1px solid rgba(164, 120, 83, 0.12);
+  background: rgba(255, 250, 243, 0.68);
+  box-shadow: 0 14px 28px rgba(118, 83, 50, 0.08);
+}
+
+.room-ledger h2 {
+  font-size: clamp(2.3rem, 4vw, 3.5rem);
+}
+
+.room-ledger-guest {
+  max-width: none;
+  padding: 20px 22px;
+}
+
+.room-ledger-guest h2 {
+  font-size: clamp(2rem, 3.2vw, 3rem);
+}
+
+.room-ledger-guest p {
+  max-width: 28ch;
+}
+
+.room-ledger-meta {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.room-ledger-meta div {
+  background: rgba(255, 249, 240, 0.74);
+}
+
+.room-amber-cluster {
+  width: auto;
+  align-self: stretch;
+  justify-self: stretch;
+  padding: 18px;
+  border-radius: 26px;
+  border: 1px solid rgba(164, 120, 83, 0.12);
+  background: rgba(255, 249, 240, 0.62);
+  box-shadow: 0 14px 28px rgba(118, 83, 50, 0.08);
+}
+
+.room-amber-cluster::before,
+.room-amber-cluster::after {
+  display: none;
+}
+
+.room-amber-cluster-head {
+  align-items: center;
+}
+
+.room-amber-cluster-head h3 {
+  font-size: 1.18rem;
+}
+
+.amber-node-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.amber-node {
+  width: auto;
+  min-height: 104px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(255, 252, 248, 0.9);
+  box-shadow: 0 10px 20px rgba(120, 82, 49, 0.06);
+}
+
+.amber-node:hover {
+  transform: translateY(-2px);
+}
+
+.amber-node.active {
+  box-shadow:
+    0 0 0 1px rgba(245, 214, 176, 0.6),
+    0 12px 22px rgba(120, 82, 49, 0.1);
+}
+
+.room-object {
+  min-height: 136px;
+  padding: 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(164, 120, 83, 0.12);
+  background: rgba(255, 250, 243, 0.72);
+  box-shadow: 0 14px 24px rgba(118, 83, 50, 0.08);
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.room-object:hover {
+  transform: translateY(-3px) !important;
+}
+
+.room-object strong,
+.room-object small {
+  z-index: auto;
+}
+
+.room-object-badge {
+  position: static;
+  min-height: 24px;
+  min-width: 0;
+  padding: 0 10px;
+  margin-bottom: auto;
+}
+
+.object-dot {
+  top: 16px;
+  right: 16px;
+}
+
+.object-clock,
+.object-vinyl,
+.object-radio,
+.object-calendar,
+.object-diary,
+.object-phone {
+  width: auto;
+  justify-self: stretch;
+  align-self: stretch;
+}
+
+.object-vinyl,
+.object-phone {
+  align-items: center;
+  text-align: center;
+}
+
+.phone-silhouette {
+  margin: 4px auto 8px;
+}
+
+.room-info {
+  width: auto;
+  justify-self: stretch;
+  align-self: stretch;
+}
+
+.room-info-card {
+  min-height: 100%;
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255, 250, 243, 0.66);
+  border: 1px solid rgba(164, 120, 83, 0.12);
+  box-shadow: 0 14px 28px rgba(118, 83, 50, 0.06);
+}
+
+.room-info-card-intro,
+.room-info-card-guest {
+  max-width: none;
+}
+
+.room-info-card h3 {
+  font-size: 1.4rem;
+}
+
+.room-status-strip {
+  min-height: 50px;
+  border-radius: 20px;
+  background: rgba(255, 248, 240, 0.84);
+  box-shadow: 0 10px 18px rgba(118, 83, 50, 0.06);
+}
+
+.phone-overlay {
+  inset: 0;
+  padding: 32px;
+  background: rgba(86, 60, 39, 0.18);
+}
+
+.phone-window {
+  max-width: 560px;
+  width: 100%;
+  height: min(720px, 100%);
+  border-radius: 30px;
+}
+
+@media (max-width: 1080px) {
+  .room-window {
+    right: 36px;
+    width: 230px;
+    height: 250px;
+  }
+
+  .room-shelf {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 210px;
+  }
+
+  .room-layout {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-areas:
+      "ledger ledger info info"
+      "amber amber info info"
+      "clock vinyl calendar radio"
+      "phone phone diary diary"
+      "status status status status"
+      ". . . .";
+  }
+
+  .room-layout-guest {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto auto auto auto auto;
+    grid-template-areas:
+      "ledger ledger calendar info"
+      "amber amber amber info"
+      "clock vinyl radio phone"
+      "status status status status"
+      ". . . .";
+  }
+
+  .room-layout-guest .object-phone,
+  .room-layout-guest .object-radio,
+  .room-layout-guest .object-vinyl,
+  .room-layout-guest .object-clock,
+  .room-layout-guest .object-calendar {
+    width: auto;
+  }
+
+  .amber-node-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 920px) {
+  .room-stage {
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .room-window,
+  .room-shelf,
+  .room-rug {
+    display: none;
+  }
+
+  .room-desk-plane {
+    left: 8%;
+    right: 8%;
+    bottom: 96px;
+    height: 120px;
+  }
+
+  .room-layout,
+  .room-layout-guest {
+    grid-template-columns: 1fr;
+    grid-template-areas: none;
+    grid-template-rows: none;
+    height: auto;
+    padding: 88px 16px 20px;
+    gap: 14px;
+  }
+
+  .room-layout > *,
+  .room-layout-guest > * {
+    position: static;
+    width: 100%;
+  }
+
+  .room-ledger,
+  .room-amber-cluster,
+  .room-status-strip,
+  .room-object,
+  .room-info {
+    width: 100%;
+  }
+
+  .room-status-strip {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .phone-overlay {
+    padding: 16px;
+  }
+
+  .phone-window {
+    height: auto;
+  }
+}
