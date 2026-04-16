@@ -742,6 +742,25 @@ select:focus-visible {
   min-width: 0;
 }
 
+.room-layout-guest {
+  grid-template-columns:
+    minmax(180px, 1.15fr)
+    minmax(150px, 0.86fr)
+    minmax(150px, 0.86fr)
+    minmax(180px, 1fr)
+    minmax(180px, 1fr);
+  grid-template-rows:
+    minmax(120px, auto)
+    minmax(108px, auto)
+    minmax(120px, 1fr)
+    auto;
+  grid-template-areas:
+    "ledger ledger calendar info info"
+    "clock amber amber info info"
+    "vinyl vinyl radio phone phone"
+    "status status status status status";
+}
+
 .room-ledger {
   grid-area: ledger;
   display: flex;
@@ -757,6 +776,12 @@ select:focus-visible {
   color: #5b3f29;
   transform: translate3d(0, 0, 96px) rotateX(6deg) rotateY(-5deg);
   transform-style: preserve-3d;
+}
+
+.room-ledger-guest {
+  align-self: start;
+  max-width: 520px;
+  padding: 22px 24px;
 }
 
 .room-amber-cluster {
@@ -1174,6 +1199,10 @@ select:focus-visible {
   transform-style: preserve-3d;
 }
 
+.room-info-guest {
+  width: min(100%, 320px);
+}
+
 .room-info-card {
   display: flex;
   flex-direction: column;
@@ -1193,6 +1222,10 @@ select:focus-visible {
   max-width: 300px;
   background:
     linear-gradient(180deg, rgba(255, 251, 246, 0.4), rgba(244, 228, 208, 0.2));
+}
+
+.room-info-card-guest {
+  max-width: 280px;
 }
 
 .room-info-card h3 {
@@ -1704,6 +1737,22 @@ select:focus-visible {
       "status status status status";
   }
 
+  .room-layout-guest {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows:
+      auto
+      auto
+      auto
+      auto
+      auto;
+    grid-template-areas:
+      "ledger ledger info info"
+      "amber amber info info"
+      "calendar clock radio radio"
+      "vinyl vinyl phone phone"
+      "status status status status";
+  }
+
   .gate-shell {
     padding: 24px 0 36px;
   }
@@ -1715,6 +1764,11 @@ select:focus-visible {
   .room-amber-cluster {
     width: min(100%, 320px);
     transform: translate3d(0, 0, 84px) rotateX(8deg);
+  }
+
+  .room-ledger-guest,
+  .room-info-guest {
+    max-width: none;
   }
 
   .room-object {

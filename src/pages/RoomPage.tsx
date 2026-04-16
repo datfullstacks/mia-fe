@@ -171,6 +171,7 @@ function getAmberNodeTitle(amber: Amber) {
 
 export function RoomPage() {
   const { currentUser, token } = useAuth()
+  const isGuest = !currentUser
   const [searchParams] = useSearchParams()
   const initialPhoneState = useMemo(() => getInitialPhoneState(searchParams), [searchParams])
   const initialActivePhoneApp =
@@ -328,25 +329,27 @@ export function RoomPage() {
           </div>
         </div>
 
-        <div className="room-layout">
-          <section className="room-ledger">
+        <div className={isGuest ? 'room-layout room-layout-guest' : 'room-layout'}>
+          <section className={isGuest ? 'room-ledger room-ledger-guest' : 'room-ledger'}>
             <p className="panel-tag">Tonight in MIA</p>
             <h2>{stageTitle}</h2>
             <p>{roomPrompt}</p>
-            <div className="room-ledger-meta">
-              <div>
-                <span>Focus</span>
-                <strong>{activeFocusLabel}</strong>
+            {!isGuest ? (
+              <div className="room-ledger-meta">
+                <div>
+                  <span>Focus</span>
+                  <strong>{activeFocusLabel}</strong>
+                </div>
+                <div>
+                  <span>Access</span>
+                  <strong>{`${availablePhoneApps.length} phone apps`}</strong>
+                </div>
+                <div>
+                  <span>Date</span>
+                  <strong>{longDate}</strong>
+                </div>
               </div>
-              <div>
-                <span>Access</span>
-                <strong>{currentUser ? `${availablePhoneApps.length} phone apps` : 'Guest unlock only'}</strong>
-              </div>
-              <div>
-                <span>Date</span>
-                <strong>{longDate}</strong>
-              </div>
-            </div>
+            ) : null}
           </section>
 
           <button
@@ -459,16 +462,18 @@ export function RoomPage() {
             )}
           </section>
 
-          <button
-            className="room-object object-diary"
-            onClick={() => setActiveObject('diary')}
-            type="button"
-          >
-            <span className="object-dot" />
-            <span className="room-object-badge">{roomObjectBadges.diary}</span>
-            <strong>Diary</strong>
-            <small>{diaryNote ? 'Saved locally' : 'Write a note'}</small>
-          </button>
+          {!isGuest ? (
+            <button
+              className="room-object object-diary"
+              onClick={() => setActiveObject('diary')}
+              type="button"
+            >
+              <span className="object-dot" />
+              <span className="room-object-badge">{roomObjectBadges.diary}</span>
+              <strong>Diary</strong>
+              <small>{diaryNote ? 'Saved locally' : 'Write a note'}</small>
+            </button>
+          ) : null}
 
           <button
             className="room-object object-phone"
@@ -484,9 +489,9 @@ export function RoomPage() {
             <small>{currentUser ? 'Seal, history, pricing' : 'Guest unlock'}</small>
           </button>
 
-          <aside className="room-info">
+          <aside className={isGuest ? 'room-info room-info-guest' : 'room-info'}>
             {!activeObject ? (
-              <div className="room-info-card room-info-card-intro">
+              <div className={isGuest ? 'room-info-card room-info-card-intro room-info-card-guest' : 'room-info-card room-info-card-intro'}>
                 <p className="panel-tag">Room reading</p>
                 <h3>{currentUser ? 'The room leads' : 'Guest-safe ambient mode'}</h3>
                 <p>
