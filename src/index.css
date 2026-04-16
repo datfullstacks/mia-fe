@@ -744,37 +744,53 @@ select:focus-visible {
 
 .room-layout-guest {
   grid-template-columns:
-    minmax(180px, 1.15fr)
-    minmax(150px, 0.86fr)
-    minmax(150px, 0.86fr)
-    minmax(180px, 1fr)
-    minmax(180px, 1fr);
+    minmax(72px, 0.36fr)
+    minmax(170px, 1fr)
+    minmax(170px, 1fr)
+    minmax(170px, 1fr)
+    minmax(170px, 1fr)
+    minmax(72px, 0.36fr);
   grid-template-rows:
     minmax(120px, auto)
-    minmax(108px, auto)
-    minmax(120px, 1fr)
+    minmax(116px, auto)
+    minmax(144px, 1fr)
     auto;
   grid-template-areas:
-    "ledger ledger calendar info info"
-    "clock amber amber info info"
-    "vinyl vinyl radio phone phone"
-    "status status status status status";
+    ". ledger ledger calendar info ."
+    ". clock amber amber info ."
+    ". vinyl radio phone phone ."
+    "status status status status status status";
+  align-items: start;
 }
 
 .room-layout-guest .object-clock {
-  width: min(100%, 164px);
+  justify-self: center;
+  align-self: center;
+  width: min(100%, 152px);
+}
+
+.room-layout-guest .object-vinyl {
+  justify-self: center;
+  align-self: end;
+  width: min(100%, 204px);
 }
 
 .room-layout-guest .object-calendar {
-  width: min(100%, 176px);
+  justify-self: center;
+  align-self: start;
+  width: min(100%, 184px);
 }
 
 .room-layout-guest .object-radio {
-  width: min(100%, 176px);
+  justify-self: center;
+  align-self: center;
+  width: min(100%, 168px);
 }
 
 .room-layout-guest .object-phone {
-  width: min(100%, 208px);
+  justify-self: center;
+  align-self: end;
+  width: min(100%, 190px);
 }
 
 .room-ledger {
@@ -798,6 +814,7 @@ select:focus-visible {
   align-self: start;
   max-width: 460px;
   padding: 18px 20px;
+  justify-self: stretch;
 }
 
 .room-ledger-guest h2 {
@@ -871,6 +888,8 @@ select:focus-visible {
 
 .room-amber-cluster-guest {
   width: min(100%, 272px);
+  justify-self: center;
+  align-self: center;
 }
 
 .amber-node-grid {
@@ -1225,6 +1244,7 @@ select:focus-visible {
 
 .room-info-guest {
   width: min(100%, 320px);
+  justify-self: stretch;
 }
 
 .room-info-card {
