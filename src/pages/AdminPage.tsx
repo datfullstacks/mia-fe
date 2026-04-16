@@ -263,6 +263,14 @@ export function AdminPage() {
                 <strong>{overview.stats.payments.pendingPayments}</strong>
               </article>
               <article className="metric-card">
+                <span>Paid payments</span>
+                <strong>{overview.stats.payments.paidPayments}</strong>
+              </article>
+              <article className="metric-card">
+                <span>Review payments</span>
+                <strong>{overview.stats.payments.reviewPayments}</strong>
+              </article>
+              <article className="metric-card">
                 <span>Mail logs</span>
                 <strong>{overview.stats.mail.totalLogs}</strong>
               </article>
@@ -420,13 +428,16 @@ export function AdminPage() {
                       >
                         <option value="all">All payments</option>
                         <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
+                        <option value="pending_review">Pending review</option>
+                        <option value="paid">Paid</option>
+                        <option value="approved_manual">Approved manually</option>
+                        <option value="expired">Expired</option>
                       </select>
                     </label>
                     <label className="stacked-field grow-field">
                       Search
                       <input
-                        placeholder="Payment ref or note..."
+                        placeholder="Payment ref, note, tx..."
                         type="search"
                         value={paymentSearchInput}
                         onChange={(event) => setPaymentSearchInput(event.target.value)}
@@ -473,7 +484,7 @@ export function AdminPage() {
                         <span className="mono-label">{payment.paymentRef}</span>
                         <h4>{payment.amount.toLocaleString()} VND</h4>
                       </div>
-                      <StatusPill status={payment.status === 'approved' ? 'opened' : 'scheduled'} />
+                      <StatusPill status={payment.status} />
                     </div>
                     <p>{payment.note || 'No note'}</p>
                     <dl className="mini-meta">
@@ -482,18 +493,29 @@ export function AdminPage() {
                         <dd>{formatDateTime(payment.createdAt)}</dd>
                       </div>
                       <div>
-                        <dt>Reviewed</dt>
-                        <dd>{payment.reviewedAt ? formatDateTime(payment.reviewedAt) : 'Pending'}</dd>
+                        <dt>Expires</dt>
+                        <dd>{payment.expiresAt ? formatDateTime(payment.expiresAt) : 'No expiry'}</dd>
+                      </div>
+                      <div>
+                        <dt>Paid</dt>
+                        <dd>{payment.paidAt ? formatDateTime(payment.paidAt) : 'Waiting'}</dd>
+                      </div>
+                      <div>
+                        <dt>Provider Tx</dt>
+                        <dd>{payment.providerTransactionId || 'Pending webhook'}</dd>
                       </div>
                     </dl>
-                    {payment.status === 'pending' ? (
+                    {payment.reviewedAt ? (
+                      <p className="helper-copy">Reviewed {formatDateTime(payment.reviewedAt)}</p>
+                    ) : null}
+                    {payment.status !== 'paid' && payment.status !== 'approved_manual' ? (
                       <button
                         className="phone-button primary"
                         disabled={pendingActionId === payment.id}
                         onClick={() => void handleApprove(payment)}
                         type="button"
                       >
-                        {pendingActionId === payment.id ? 'Approving...' : 'Approve payment'}
+                        {pendingActionId === payment.id ? 'Approving...' : 'Approve manually'}
                       </button>
                     ) : null}
                   </article>

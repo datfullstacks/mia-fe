@@ -34,16 +34,26 @@ export interface AmberListOptions {
   pageSize?: number
 }
 
+export type PaymentStatus = 'pending' | 'pending_review' | 'paid' | 'approved_manual' | 'expired'
+
 export interface Payment {
   id: string
   paymentRef: string
   amount: number
   note: string
-  status: 'pending' | 'approved'
+  status: PaymentStatus
   createdAt: string
+  expiresAt: string | null
+  paidAt: string | null
   userId: string
   reviewedAt: string | null
   reviewedBy: string | null
+  provider: 'sepay_qr'
+  providerTransactionId: string | null
+  bankName: string
+  accountNumber: string
+  accountName: string
+  qrUrl: string | null
 }
 
 export interface MailLog {
@@ -112,6 +122,8 @@ export interface AdminOverviewResponse {
     payments: {
       totalPayments: number
       pendingPayments: number
+      paidPayments: number
+      reviewPayments: number
     }
     mail: {
       totalLogs: number
@@ -353,7 +365,13 @@ export function fetchPayments(token?: string | null) {
   })
 }
 
-export function createPayment(token: string | null | undefined, payload: { amount: number; note: string }) {
+export function fetchPayment(token: string | null | undefined, paymentId: string) {
+  return request<{ item: Payment }>(`/api/payments/${paymentId}`, {
+    headers: authHeaders(token),
+  })
+}
+
+export function createPayment(token: string | null | undefined, payload: { note: string }) {
   return request<{ item: Payment }>('/api/payments', {
     method: 'POST',
     headers: authHeaders(token),
@@ -368,7 +386,7 @@ export function fetchAdminOverview(
     amberSearch?: string
     amberPage?: number
     amberPageSize?: number
-    paymentStatus?: 'all' | Payment['status']
+    paymentStatus?: 'all' | PaymentStatus
     paymentSearch?: string
     paymentPage?: number
     paymentPageSize?: number

@@ -14,6 +14,7 @@ interface AuthContextValue {
   token: string | null
   currentUser: User | null
   isLoading: boolean
+  refreshSession: () => Promise<void>
   login: (payload: { email: string; password: string }) => Promise<void>
   register: (payload: { name: string; email: string; password: string }) => Promise<void>
   logout: () => Promise<void>
@@ -27,24 +28,24 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    async function restoreSession() {
-      try {
-        const response = await fetchMe(token)
-        setCurrentUser(response.user)
-        setToken(SESSION_SENTINEL)
-        setCsrfToken(response.csrfToken)
-      } catch {
-        setToken(null)
-        setCurrentUser(null)
-        setCsrfToken(null)
-      } finally {
-        setIsLoading(false)
-      }
+  const refreshSession = useCallback(async () => {
+    try {
+      const response = await fetchMe(token)
+      setCurrentUser(response.user)
+      setToken(SESSION_SENTINEL)
+      setCsrfToken(response.csrfToken)
+    } catch {
+      setToken(null)
+      setCurrentUser(null)
+      setCsrfToken(null)
+    } finally {
+      setIsLoading(false)
     }
-
-    void restoreSession()
   }, [token])
+
+  useEffect(() => {
+    void refreshSession()
+  }, [refreshSession])
 
   const login = useCallback(async (payload: { email: string; password: string }) => {
     const response = await loginUser(payload)
@@ -77,11 +78,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
       token,
       currentUser,
       isLoading,
+      refreshSession,
       login,
       register,
       logout,
     }),
-    [token, currentUser, isLoading, login, register, logout],
+    [token, currentUser, isLoading, refreshSession, login, register, logout],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
