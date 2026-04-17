@@ -55,8 +55,9 @@ interface VinylTrackOption {
   id: string
   title: string
   detail: string
-  kind: 'preset' | 'uploaded'
+  kind: 'default' | 'preset' | 'uploaded'
   presetIndex?: number
+  audioUrl?: string
   objectUrl?: string
 }
 
@@ -103,12 +104,22 @@ const VINYL_PRESETS: VinylPreset[] = [
   { pad: 207.65, harmony: 261.63, melody: [415.3, 440, 415.3, 349.23], wobbleHz: 0.24 },
 ]
 
-const DEFAULT_VINYL_TRACKS: VinylTrackOption[] = VINYL_TRACKS.map((track, presetIndex) => ({
-  id: `preset-${presetIndex}`,
+const DEFAULT_VINYL_FILES = [
+  'fassounds-satisfying-lofi-for-focus-study-amp-working-242103.mp3',
+  'lofi_hour-empty-mind-118973.mp3',
+  'lofi_hour-sleepy-cat-118974.mp3',
+  'nastelbom-lofi-chill-372954.mp3',
+  'tunetank-chill-lofi-347217.mp3',
+  'tunetank-chill-lofi-beat-348529.mp3',
+  'tunetank-chill-lofi-beat-349110.mp3',
+]
+
+const DEFAULT_VINYL_TRACKS: VinylTrackOption[] = VINYL_TRACKS.map((track, index) => ({
+  id: `default-${index}`,
   title: track,
-  detail: 'Loop MIA mô phỏng, không bản quyền',
-  kind: 'preset',
-  presetIndex,
+  detail: 'Nhạc mặc định từ thư viện MIA, không bản quyền',
+  kind: 'default',
+  audioUrl: `/music/${DEFAULT_VINYL_FILES[index]}`,
 }))
 
 const CALENDAR_MESSAGES = [
@@ -279,6 +290,7 @@ export function RoomPage() {
         title: track.title,
         detail: `MP3 của bạn · ${track.fileName}`,
         kind: 'uploaded' as const,
+        audioUrl: track.objectUrl,
         objectUrl: track.objectUrl,
       })),
     ],
@@ -456,10 +468,10 @@ export function RoomPage() {
     }
   }, [stopVinylPlayback, vinylVolume])
 
-  const startUploadedVinylPlayback = useCallback(
+  const startAudioVinylPlayback = useCallback(
     async (track: VinylTrackOption) => {
       const audio = vinylAudioRef.current
-      if (!audio || !track.objectUrl) {
+      if (!audio || !track.audioUrl) {
         setVinylError('Không đọc được file MP3 này.')
         setVinylPlaying(false)
         return false
@@ -469,8 +481,8 @@ export function RoomPage() {
       setVinylError(null)
 
       try {
-        if (audio.src !== track.objectUrl) {
-          audio.src = track.objectUrl
+        if (audio.src !== track.audioUrl) {
+          audio.src = track.audioUrl
           audio.load()
         }
         audio.currentTime = 0
@@ -489,12 +501,12 @@ export function RoomPage() {
   const playVinylTrack = useCallback(
     async (track: VinylTrackOption | undefined) => {
       if (!track) return false
-      if (track.kind === 'uploaded') {
-        return startUploadedVinylPlayback(track)
+      if (track.kind === 'default' || track.kind === 'uploaded') {
+        return startAudioVinylPlayback(track)
       }
       return startPresetVinylPlayback(track.presetIndex ?? 0)
     },
-    [startPresetVinylPlayback, startUploadedVinylPlayback],
+    [startAudioVinylPlayback, startPresetVinylPlayback],
   )
 
   const loadVinylLibrary = useCallback(async () => {
@@ -893,7 +905,7 @@ export function RoomPage() {
             <div>
               <span className="mono-label">Thư viện đĩa than</span>
               <p className="helper-copy">
-                Bộ MIA có {DEFAULT_VINYL_TRACKS.length} loop mô phỏng không bản quyền.
+                Bộ MIA có {DEFAULT_VINYL_TRACKS.length} bản nhạc mặc định không bản quyền.
                 {uploadedVinylTracks.length > 0
                   ? ` Bạn đã thêm ${uploadedVinylTracks.length} file MP3 trên thiết bị này.`
                   : ' Bạn cũng có thể thêm MP3 của riêng mình.'}
@@ -1165,7 +1177,7 @@ export function RoomPage() {
               {vinylPlaying
                 ? currentVinylTrack?.kind === 'uploaded'
                   ? 'Đang phát MP3 cá nhân'
-                  : 'Đang phát loop MIA'
+                  : 'Đang phát nhạc mặc định'
                 : 'Nhấn để mở player'}
             </small>
           </button>

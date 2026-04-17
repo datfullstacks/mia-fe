@@ -37,11 +37,6 @@ export function SettingsPanel() {
           <button className="phone-button ghost" onClick={() => navigate('/gate')} type="button">
             Về cổng
           </button>
-          {currentUser?.isAdmin ? (
-            <button className="phone-button ghost" onClick={() => navigate('/admin')} type="button">
-              Mở admin
-            </button>
-          ) : null}
         </div>
 
         <button className="phone-button ghost" onClick={() => void handleLogout()} type="button">
