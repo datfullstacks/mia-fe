@@ -31,10 +31,10 @@ export function SealPanel() {
       }
 
       const response = await createAmber(token, {
-        recipientEmail: form.recipientEmail,
-        message: form.message,
+        recipientEmail: form.recipientEmail.trim().toLowerCase(),
+        message: form.message.trim(),
         openAt: new Date(form.openAt).toISOString(),
-        passcode: form.passcode,
+        passcode: form.passcode.trim(),
       })
 
       const nextOpenAt = createInitialOpenAt()
