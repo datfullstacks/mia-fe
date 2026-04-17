@@ -18,6 +18,7 @@ export function SealPanel() {
   const [result, setResult] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isPasscodeVisible, setIsPasscodeVisible] = useState(false)
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -111,15 +112,25 @@ export function SealPanel() {
 
         <label>
           Mật mã mở
-          <input
-            required
-            minLength={4}
-            type="password"
-            value={form.passcode}
-            onChange={(event) =>
-              setForm((current) => ({ ...current, passcode: event.target.value }))
-            }
-          />
+          <div className="password-field">
+            <input
+              required
+              minLength={4}
+              type={isPasscodeVisible ? 'text' : 'password'}
+              value={form.passcode}
+              onChange={(event) =>
+                setForm((current) => ({ ...current, passcode: event.target.value }))
+              }
+            />
+            <button
+              aria-label={isPasscodeVisible ? 'Ẩn mật mã' : 'Hiện mật mã'}
+              className="password-toggle"
+              onClick={() => setIsPasscodeVisible((current) => !current)}
+              type="button"
+            >
+              {isPasscodeVisible ? 'Ẩn' : 'Xem'}
+            </button>
+          </div>
         </label>
 
         <button

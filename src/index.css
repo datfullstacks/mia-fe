@@ -252,6 +252,27 @@ select:focus-visible {
   resize: vertical;
 }
 
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 76px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #7c4a28;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
 .phone-button {
   border: none;
   border-radius: var(--radius-pill);
