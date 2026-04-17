@@ -252,7 +252,9 @@ export function RoomPage() {
 
       const context = new AudioContextClass()
       const masterGain = context.createGain()
+      const highPass = context.createBiquadFilter()
       const filter = context.createBiquadFilter()
+      const compressor = context.createDynamicsCompressor()
       const padGain = context.createGain()
       const harmonyGain = context.createGain()
       const leadGain = context.createGain()
@@ -270,17 +272,25 @@ export function RoomPage() {
         throw new Error('AudioContext could not start')
       }
 
-      masterGain.gain.value = Math.max(vinylVolume / 100, 0.01) * 0.36
+      masterGain.gain.value = Math.max(vinylVolume / 100, 0.01) * 0.52
+      highPass.type = 'highpass'
+      highPass.frequency.value = 120
+      highPass.Q.value = 0.8
       filter.type = 'lowpass'
-      filter.frequency.value = 1800
-      filter.Q.value = 0.9
-      padGain.gain.value = 0.12
-      harmonyGain.gain.value = 0.065
-      leadGain.gain.value = 0.05
-      noiseGain.gain.value = 0.016
+      filter.frequency.value = 2600
+      filter.Q.value = 0.7
+      compressor.threshold.value = -20
+      compressor.knee.value = 18
+      compressor.ratio.value = 2.5
+      compressor.attack.value = 0.02
+      compressor.release.value = 0.2
+      padGain.gain.value = 0.08
+      harmonyGain.gain.value = 0.05
+      leadGain.gain.value = 0.09
+      noiseGain.gain.value = 0.004
       padOsc.type = 'triangle'
       harmonyOsc.type = 'sine'
-      leadOsc.type = 'triangle'
+      leadOsc.type = 'sine'
       lowLfo.type = 'sine'
       padOsc.frequency.value = preset.pad
       harmonyOsc.frequency.value = preset.harmony
@@ -293,14 +303,16 @@ export function RoomPage() {
       padOsc.connect(padGain)
       harmonyOsc.connect(harmonyGain)
       leadOsc.connect(leadGain)
-      padGain.connect(filter)
-      harmonyGain.connect(filter)
-      leadGain.connect(filter)
+      padGain.connect(highPass)
+      harmonyGain.connect(highPass)
+      leadGain.connect(highPass)
       crackle.buffer = buildNoiseBuffer(context)
       crackle.loop = true
       crackle.connect(noiseGain)
-      noiseGain.connect(filter)
-      filter.connect(masterGain)
+      noiseGain.connect(highPass)
+      highPass.connect(filter)
+      filter.connect(compressor)
+      compressor.connect(masterGain)
       masterGain.connect(context.destination)
 
       let melodyStep = 0
@@ -330,7 +342,9 @@ export function RoomPage() {
           harmonyOsc.disconnect()
           leadOsc.disconnect()
           lowLfo.disconnect()
+          highPass.disconnect()
           filter.disconnect()
+          compressor.disconnect()
           masterGain.disconnect()
           void context.close()
         },
@@ -422,7 +436,7 @@ export function RoomPage() {
   useEffect(() => {
     const currentPlayback = vinylPlaybackRef.current
     if (!currentPlayback) return
-    currentPlayback.masterGain.gain.value = Math.max(vinylVolume / 100, 0.01) * 0.36
+    currentPlayback.masterGain.gain.value = Math.max(vinylVolume / 100, 0.01) * 0.52
   }, [vinylVolume])
 
   useEffect(() => {
