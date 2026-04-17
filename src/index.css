@@ -3702,3 +3702,79 @@ select:focus-visible {
     grid-template-columns: repeat(3, minmax(180px, 1fr));
   }
 }
+
+@media (max-width: 860px) {
+  .room-shell,
+  .room-shell-lofi {
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .room-stage,
+  .room-stage-lofi {
+    min-height: 100dvh;
+    height: auto;
+    overflow: visible;
+  }
+
+  .room-grid-vn,
+  .room-grid-vn-guest {
+    min-height: auto;
+    padding: 88px 16px 24px;
+    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-template-areas: none;
+    align-content: start;
+    justify-content: stretch;
+  }
+
+  .room-object-vn,
+  .amber-tray-vn,
+  .room-object-vn-clock,
+  .room-object-vn-calendar,
+  .room-object-vn-vinyl,
+  .room-object-vn-radio,
+  .room-object-vn-note,
+  .room-object-vn-phone {
+    grid-area: auto;
+    max-width: none;
+  }
+
+  .amber-tray-vn,
+  .room-object-vn-note,
+  .room-object-vn-phone {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 500px) {
+  .room-grid-vn,
+  .room-grid-vn-guest {
+    padding: 76px 12px 18px;
+    gap: 12px;
+  }
+
+  .room-object-vn,
+  .amber-tray-vn {
+    min-height: 122px;
+    padding: 14px;
+    border-radius: 26px;
+  }
+
+  .room-object-vn strong,
+  .amber-tray-vn strong {
+    font-size: 1rem;
+  }
+
+  .room-object-vn small,
+  .amber-tray-vn small,
+  .helper-copy {
+    font-size: 0.88rem;
+  }
+
+  .vinyl-mini-disc {
+    transform: scale(0.9);
+  }
+}
