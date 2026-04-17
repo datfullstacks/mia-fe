@@ -47,12 +47,26 @@ export function GatePage() {
   return (
     <div className="gate-shell">
       <section className="gate-panel gate-copy">
+        <div className="gate-copy-ornament gate-copy-ornament-top" aria-hidden="true" />
+        <div className="gate-copy-ornament gate-copy-ornament-bottom" aria-hidden="true" />
         <p className="eyebrow">MIA Gate</p>
-        <h1>Moments in Amber</h1>
+        <h1>Gửi một lời nhắn cho bạn và bạn bè trong tương lai.</h1>
         <p>
-          A web experience for sealing a message, leaving it in a warm room, and
-          returning only when time allows it to open.
+          MIA la noi ban co the cat giu mot loi nhan, hen ngay mo lai, va gui no
+          den chinh minh hoac nhung nguoi ban muon nho den sau nay.
         </p>
+        <div className="gate-copy-tags">
+          <span>Hen ngay mo lai</span>
+          <span>Gui cho chinh minh</span>
+          <span>Luu cho ban be</span>
+        </div>
+        <div className="gate-copy-card">
+          <strong>Một lời nhắn có thể mở ra đúng thời điểm.</strong>
+          <p>
+            Viết lại điều bạn muốn giữ, khóa nó bằng amber, và để thời gian trả lại
+            vào lúc nó thực sự có ý nghĩa.
+          </p>
+        </div>
       </section>
 
       <section className="gate-panel gate-form">
