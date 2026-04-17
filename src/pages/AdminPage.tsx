@@ -13,6 +13,7 @@ import {
   type Payment,
 } from '../lib/api'
 import { useAuth } from '../lib/auth'
+import { usePageMeta } from '../lib/pageMeta'
 import { formatDateTime } from '../lib/time'
 
 const ADMIN_PAGE_SIZE = 5
@@ -35,6 +36,11 @@ function getPaidLabel(payment: Payment) {
 
 export function AdminPage() {
   const { currentUser, isLoading, token } = useAuth()
+  usePageMeta({
+    title: 'MIA Admin | Quản trị amber, mail và thanh toán',
+    description:
+      'Trang quản trị MIA để theo dõi amber, mail logs, thanh toán và lịch sử thao tác quản trị viên.',
+  })
   const [overview, setOverview] = useState<AdminOverviewResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isRefreshing, setIsRefreshing] = useState(true)

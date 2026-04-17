@@ -9,6 +9,7 @@ import { UnsealPanel } from '../components/UnsealPanel'
 import { subscribeToAmbersChanged } from '../lib/amberEvents'
 import { type Amber, fetchAmbers, fetchRadioStations, type RadioStation } from '../lib/api'
 import { useAuth } from '../lib/auth'
+import { usePageMeta } from '../lib/pageMeta'
 import { formatClock, formatDateTime } from '../lib/time'
 
 type RoomDevice = 'amber' | 'clock' | 'vinyl' | 'radio' | 'calendar' | 'note'
@@ -194,6 +195,11 @@ function getAudioContextClass(): BrowserAudioContext | null {
 
 export function RoomPage() {
   const { currentUser, token } = useAuth()
+  usePageMeta({
+    title: 'MIA Room | Lưu giữ amber và mở lời nhắn đúng thời điểm',
+    description:
+      'Vào phòng MIA để tạo amber, hẹn ngày mở, nghe radio, mở đĩa than và đọc lại những lời nhắn theo thời gian.',
+  })
   const isGuest = !currentUser
   const [searchParams] = useSearchParams()
   const initialPhoneState = useMemo(() => getInitialPhoneState(searchParams), [searchParams])

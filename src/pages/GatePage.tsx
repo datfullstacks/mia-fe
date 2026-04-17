@@ -1,10 +1,16 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/auth'
+import { usePageMeta } from '../lib/pageMeta'
 
 export function GatePage() {
   const navigate = useNavigate()
   const { login, register } = useAuth()
+  usePageMeta({
+    title: 'MIA Gate | Gửi một lời nhắn cho bạn và bạn bè trong tương lai',
+    description:
+      'MIA là nơi bạn có thể cất giữ một lời nhắn, hẹn ngày mở lại và gửi đến chính mình hoặc bạn bè trong tương lai.',
+  })
   const [mode, setMode] = useState<'login' | 'register'>('login')
   const [form, setForm] = useState({
     name: '',
