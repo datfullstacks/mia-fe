@@ -22,6 +22,23 @@ function formatVnd(amount: number) {
   return amount.toLocaleString('vi-VN') + ' VND'
 }
 
+function getStatsPeriodLabel(period: 'all' | 'day' | 'week' | 'month' | 'quarter' | 'year') {
+  switch (period) {
+    case 'day':
+      return 'Hôm nay'
+    case 'week':
+      return 'Tuần này'
+    case 'month':
+      return 'Tháng này'
+    case 'quarter':
+      return 'Quý này'
+    case 'year':
+      return 'Năm nay'
+    default:
+      return 'Toàn bộ thời gian'
+  }
+}
+
 function getPaidLabel(payment: Payment) {
   if (payment.paidAt) {
     return formatDateTime(payment.paidAt)
@@ -61,6 +78,7 @@ export function AdminPage() {
   const [mailSearch, setMailSearch] = useState('')
   const [mailPage, setMailPage] = useState(1)
   const [actionTypeFilter, setActionTypeFilter] = useState<'all' | AdminActionLog['actionType']>('all')
+  const [statsPeriod, setStatsPeriod] = useState<'all' | 'day' | 'week' | 'month' | 'quarter' | 'year'>('all')
   const [actionSearchInput, setActionSearchInput] = useState('')
   const [actionSearch, setActionSearch] = useState('')
   const [actionPage, setActionPage] = useState(1)
@@ -89,6 +107,7 @@ export function AdminPage() {
         mailSearch,
         mailPage,
         mailPageSize: ADMIN_PAGE_SIZE,
+        statsPeriod,
         actionType: actionTypeFilter,
         actionSearch,
         actionPage,
@@ -128,6 +147,7 @@ export function AdminPage() {
     paymentPage,
     paymentSearch,
     paymentStatusFilter,
+    statsPeriod,
     token,
   ])
 
@@ -246,6 +266,24 @@ export function AdminPage() {
         <div className="panel-heading inline admin-heading">
           <p className="helper-copy">Signed in as {currentUser.email}</p>
           <div className="button-row">
+            <label className="stacked-field">
+              Thống kê
+              <select
+                value={statsPeriod}
+                onChange={(event) =>
+                  setStatsPeriod(
+                    event.target.value as 'all' | 'day' | 'week' | 'month' | 'quarter' | 'year',
+                  )
+                }
+              >
+                <option value="all">Tất cả</option>
+                <option value="day">Ngày</option>
+                <option value="week">Tuần</option>
+                <option value="month">Tháng</option>
+                <option value="quarter">Quý</option>
+                <option value="year">Năm</option>
+              </select>
+            </label>
             <Link className="phone-button ghost" to="/room">
               Back to Room
             </Link>
@@ -255,57 +293,59 @@ export function AdminPage() {
           </div>
         </div>
 
+        <p className="helper-copy">Đang xem thống kê theo: {getStatsPeriodLabel(statsPeriod)}</p>
+
         {isRefreshing ? <p className="feedback">Loading admin data...</p> : null}
 
         {overview ? (
           <>
             <div className="metric-grid admin">
               <article className="metric-card">
-                <span>Users</span>
+                <span>Người dùng mới</span>
                 <strong>{overview.stats.users.totalUsers}</strong>
               </article>
               <article className="metric-card">
-                <span>Legacy Pro users</span>
+                <span>Người dùng Pro</span>
                 <strong>{overview.stats.users.proUsers}</strong>
               </article>
               <article className="metric-card">
-                <span>Total ambers</span>
+                <span>Amber đã tạo</span>
                 <strong>{overview.stats.ambers.totalAmbers}</strong>
               </article>
               <article className="metric-card">
-                <span>Ready ambers</span>
+                <span>Amber sẵn sàng mở</span>
                 <strong>{overview.stats.ambers.readyCount}</strong>
               </article>
               <article className="metric-card">
-                <span>Payments</span>
+                <span>Yêu cầu thanh toán</span>
                 <strong>{overview.stats.payments.totalPayments}</strong>
               </article>
               <article className="metric-card">
-                <span>Pending payments</span>
+                <span>Thanh toán chờ xử lý</span>
                 <strong>{overview.stats.payments.pendingPayments}</strong>
               </article>
               <article className="metric-card">
-                <span>Paid payments</span>
+                <span>Thanh toán thành công</span>
                 <strong>{overview.stats.payments.paidPayments}</strong>
               </article>
               <article className="metric-card">
-                <span>Review payments</span>
+                <span>Thanh toán cần duyệt</span>
                 <strong>{overview.stats.payments.reviewPayments}</strong>
               </article>
               <article className="metric-card">
-                <span>Mail logs</span>
+                <span>Mail đã ghi nhận</span>
                 <strong>{overview.stats.mail.totalLogs}</strong>
               </article>
               <article className="metric-card">
-                <span>Failed mail logs</span>
+                <span>Mail thất bại</span>
                 <strong>{overview.stats.mail.failedLogs}</strong>
               </article>
               <article className="metric-card">
-                <span>Ready emails</span>
+                <span>Mail ready</span>
                 <strong>{overview.stats.mail.readyEmails}</strong>
               </article>
               <article className="metric-card">
-                <span>Admin actions</span>
+                <span>Tác vụ admin</span>
                 <strong>{overview.stats.audit.totalActionLogs}</strong>
               </article>
             </div>

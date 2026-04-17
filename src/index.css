@@ -3062,8 +3062,46 @@ select:focus-visible {
   color: #4f2e1b;
 }
 
+.vinyl-device-meta p {
+  margin: 0;
+  color: #7a5d46;
+}
+
+.vinyl-library-panel {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 18px 20px;
+  border-radius: 24px;
+  background: rgba(255, 249, 240, 0.78);
+  border: 1px solid rgba(143, 96, 52, 0.12);
+}
+
+.vinyl-upload-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 132px;
+  overflow: hidden;
+}
+
+.vinyl-upload-button input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
 .track-list {
   display: grid;
+  gap: 10px;
+}
+
+.track-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
 }
 
@@ -3078,11 +3116,40 @@ select:focus-visible {
   background: rgba(255, 252, 247, 0.86);
   text-align: left;
   cursor: pointer;
+  width: 100%;
 }
 
-.track-row.active {
+.track-row-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.track-row-body strong,
+.track-row-body small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track-row-body small {
+  color: #8b6a52;
+}
+
+.track-entry.active .track-row {
   border-color: rgba(169, 93, 45, 0.28);
   background: rgba(255, 245, 232, 0.96);
+}
+
+.track-row-remove {
+  border: 1px solid rgba(139, 94, 57, 0.12);
+  border-radius: 18px;
+  padding: 0 16px;
+  background: rgba(255, 247, 239, 0.9);
+  color: #8f6034;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .radio-device {
@@ -3353,6 +3420,14 @@ select:focus-visible {
 
   .note-device,
   .vinyl-device {
+    grid-template-columns: 1fr;
+  }
+
+  .vinyl-library-panel {
+    flex-direction: column;
+  }
+
+  .track-entry {
     grid-template-columns: 1fr;
   }
 

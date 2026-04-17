@@ -58,13 +58,13 @@ export function GatePage() {
         <p className="eyebrow">MIA Gate</p>
         <h1>Gửi một lời nhắn cho bạn và bạn bè trong tương lai.</h1>
         <p>
-          MIA la noi ban co the cat giu mot loi nhan, hen ngay mo lai, va gui no
-          den chinh minh hoac nhung nguoi ban muon nho den sau nay.
+          MIA là nơi bạn có thể cất giữ một lời nhắn, hẹn ngày mở lại, và gửi nó
+          đến chính mình hoặc những người bạn muốn nhớ đến sau này.
         </p>
         <div className="gate-copy-tags">
-          <span>Hen ngay mo lai</span>
-          <span>Gui cho chinh minh</span>
-          <span>Luu cho ban be</span>
+          <span>Hẹn ngày mở lại</span>
+          <span>Gửi cho chính mình</span>
+          <span>Lưu cho bạn bè</span>
         </div>
         <div className="gate-copy-card">
           <strong>Một lời nhắn có thể mở ra đúng thời điểm.</strong>

@@ -139,6 +139,7 @@ export interface OverviewResponse {
 }
 
 export interface AdminOverviewResponse {
+  statsPeriod: 'all' | 'day' | 'week' | 'month' | 'quarter' | 'year'
   stats: {
     users: {
       totalUsers: number
@@ -434,6 +435,7 @@ export function fetchAdminOverview(
     mailPage?: number
     mailPageSize?: number
     actionType?: 'all' | AdminActionLog['actionType']
+    statsPeriod?: AdminOverviewResponse['statsPeriod']
     actionSearch?: string
     actionPage?: number
     actionPageSize?: number
@@ -495,6 +497,10 @@ export function fetchAdminOverview(
 
   if (options?.actionType && options.actionType !== 'all') {
     params.set('actionType', options.actionType)
+  }
+
+  if (options?.statsPeriod && options.statsPeriod !== 'all') {
+    params.set('statsPeriod', options.statsPeriod)
   }
 
   if (options?.actionSearch?.trim()) {

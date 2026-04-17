@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AmberPanel } from '../components/AmberPanel'
 import { HistoryPanel } from '../components/HistoryPanel'
@@ -11,6 +11,13 @@ import { type Amber, fetchAmbers, fetchRadioStations, type RadioStation } from '
 import { useAuth } from '../lib/auth'
 import { usePageMeta } from '../lib/pageMeta'
 import { formatClock, formatDateTime } from '../lib/time'
+import {
+  deleteStoredVinylTrack,
+  listStoredVinylTracks,
+  saveStoredVinylFiles,
+  type StoredVinylTrackRecord,
+  supportsVinylLibrary,
+} from '../lib/vinylLibrary'
 
 type RoomDevice = 'amber' | 'clock' | 'vinyl' | 'radio' | 'calendar' | 'note'
 type AmberMode = 'seal' | 'unseal'
@@ -33,6 +40,24 @@ interface VinylPlayback {
   context: AudioContext
   masterGain: GainNode
   stop: () => void
+}
+
+interface UploadedVinylTrack {
+  id: string
+  title: string
+  fileName: string
+  objectUrl: string
+  addedAt: string
+  size: number
+}
+
+interface VinylTrackOption {
+  id: string
+  title: string
+  detail: string
+  kind: 'preset' | 'uploaded'
+  presetIndex?: number
+  objectUrl?: string
 }
 
 type BrowserAudioContext = typeof AudioContext
@@ -77,6 +102,14 @@ const VINYL_PRESETS: VinylPreset[] = [
   { pad: 146.83, harmony: 185, melody: [293.66, 329.63, 293.66, 261.63], wobbleHz: 0.18 },
   { pad: 207.65, harmony: 261.63, melody: [415.3, 440, 415.3, 349.23], wobbleHz: 0.24 },
 ]
+
+const DEFAULT_VINYL_TRACKS: VinylTrackOption[] = VINYL_TRACKS.map((track, presetIndex) => ({
+  id: `preset-${presetIndex}`,
+  title: track,
+  detail: 'Loop MIA mô phỏng, không bản quyền',
+  kind: 'preset',
+  presetIndex,
+}))
 
 const CALENDAR_MESSAGES = [
   'Hôm nay cứ đi chậm một chút, mọi thứ không cần gấp.',
@@ -217,10 +250,13 @@ export function RoomPage() {
   const [radioStationIndex, setRadioStationIndex] = useState(0)
   const [radioVolume, setRadioVolume] = useState(52)
   const [radioPlaying, setRadioPlaying] = useState(false)
-  const [vinylTrackIndex, setVinylTrackIndex] = useState(0)
+  const [selectedVinylTrackId, setSelectedVinylTrackId] = useState(DEFAULT_VINYL_TRACKS[0].id)
   const [vinylVolume, setVinylVolume] = useState(38)
   const [vinylPlaying, setVinylPlaying] = useState(false)
   const [vinylError, setVinylError] = useState<string | null>(null)
+  const [uploadedVinylTracks, setUploadedVinylTracks] = useState<UploadedVinylTrack[]>([])
+  const [isVinylLibraryLoading, setIsVinylLibraryLoading] = useState(false)
+  const [vinylLibraryFeedback, setVinylLibraryFeedback] = useState<string | null>(null)
   const [calendarCursor, setCalendarCursor] = useState(() => startOfMonth(new Date()))
   const [calendarSelectedKey, setCalendarSelectedKey] = useState(() => toDateKey(new Date()))
   const [diaryEntries, setDiaryEntries] = useState<Record<string, DiaryEntry>>(() => loadDiaryEntries())
@@ -228,24 +264,80 @@ export function RoomPage() {
   const [diaryDraft, setDiaryDraft] = useState(() => loadDiaryEntries()[toDateKey(new Date())]?.content || '')
   const [diaryFeedback, setDiaryFeedback] = useState<string | null>(null)
   const radioAudioRef = useRef<HTMLAudioElement | null>(null)
+  const vinylAudioRef = useRef<HTMLAudioElement | null>(null)
   const vinylPlaybackRef = useRef<VinylPlayback | null>(null)
+  const vinylObjectUrlsRef = useRef<string[]>([])
   const availablePhoneApps = currentUser ? PHONE_APPS : GUEST_PHONE_APPS
+  const vinylLibraryAvailable = useMemo(() => supportsVinylLibrary(), [])
   const timeSegment = getTimeSegment(clock)
   const radioStation = radioStations[radioStationIndex] ?? null
+  const vinylTracks = useMemo(
+    () => [
+      ...DEFAULT_VINYL_TRACKS,
+      ...uploadedVinylTracks.map((track) => ({
+        id: track.id,
+        title: track.title,
+        detail: `MP3 của bạn · ${track.fileName}`,
+        kind: 'uploaded' as const,
+        objectUrl: track.objectUrl,
+      })),
+    ],
+    [uploadedVinylTracks],
+  )
+  const currentVinylTrack = useMemo(
+    () => vinylTracks.find((track) => track.id === selectedVinylTrackId) ?? vinylTracks[0],
+    [selectedVinylTrackId, vinylTracks],
+  )
   const calendarDays = useMemo(() => buildCalendarDays(calendarCursor), [calendarCursor])
   const diaryList = useMemo(
     () => Object.values(diaryEntries).sort((left, right) => right.date.localeCompare(left.date)),
     [diaryEntries],
   )
 
-  const stopVinylPlayback = useCallback(() => {
-    const currentPlayback = vinylPlaybackRef.current
-    if (!currentPlayback) return
-    currentPlayback.stop()
-    vinylPlaybackRef.current = null
+  const revokeUploadedVinylUrls = useCallback(() => {
+    for (const objectUrl of vinylObjectUrlsRef.current) {
+      URL.revokeObjectURL(objectUrl)
+    }
+    vinylObjectUrlsRef.current = []
   }, [])
 
-  const startVinylPlayback = useCallback(async (trackIndex: number) => {
+  const hydrateUploadedVinylTracks = useCallback(
+    (records: StoredVinylTrackRecord[]) => {
+      revokeUploadedVinylUrls()
+      const nextTracks = records.map((track) => {
+        const objectUrl = URL.createObjectURL(track.file)
+        vinylObjectUrlsRef.current.push(objectUrl)
+        return {
+          id: track.id,
+          title: track.title,
+          fileName: track.fileName,
+          objectUrl,
+          addedAt: track.addedAt,
+          size: track.size,
+        } satisfies UploadedVinylTrack
+      })
+      setUploadedVinylTracks(nextTracks)
+    },
+    [revokeUploadedVinylUrls],
+  )
+
+  const stopVinylAudio = useCallback(() => {
+    const audio = vinylAudioRef.current
+    if (!audio) return
+    audio.pause()
+    audio.currentTime = 0
+  }, [])
+
+  const stopVinylPlayback = useCallback(() => {
+    const currentPlayback = vinylPlaybackRef.current
+    if (currentPlayback) {
+      currentPlayback.stop()
+      vinylPlaybackRef.current = null
+    }
+    stopVinylAudio()
+  }, [stopVinylAudio])
+
+  const startPresetVinylPlayback = useCallback(async (trackIndex: number) => {
     stopVinylPlayback()
     setVinylError(null)
 
@@ -355,11 +447,69 @@ export function RoomPage() {
           void context.close()
         },
       }
+
+      return true
     } catch {
       setVinylError('Trình duyệt chưa cho phát âm thanh. Hãy bấm phát lại.')
       setVinylPlaying(false)
+      return false
     }
   }, [stopVinylPlayback, vinylVolume])
+
+  const startUploadedVinylPlayback = useCallback(
+    async (track: VinylTrackOption) => {
+      const audio = vinylAudioRef.current
+      if (!audio || !track.objectUrl) {
+        setVinylError('Không đọc được file MP3 này.')
+        setVinylPlaying(false)
+        return false
+      }
+
+      stopVinylPlayback()
+      setVinylError(null)
+
+      try {
+        if (audio.src !== track.objectUrl) {
+          audio.src = track.objectUrl
+          audio.load()
+        }
+        audio.currentTime = 0
+        audio.volume = Math.max(vinylVolume / 100, 0)
+        await audio.play()
+        return true
+      } catch {
+        setVinylError('Trình duyệt đang chặn phát file MP3. Hãy bấm phát lại.')
+        setVinylPlaying(false)
+        return false
+      }
+    },
+    [stopVinylPlayback, vinylVolume],
+  )
+
+  const playVinylTrack = useCallback(
+    async (track: VinylTrackOption | undefined) => {
+      if (!track) return false
+      if (track.kind === 'uploaded') {
+        return startUploadedVinylPlayback(track)
+      }
+      return startPresetVinylPlayback(track.presetIndex ?? 0)
+    },
+    [startPresetVinylPlayback, startUploadedVinylPlayback],
+  )
+
+  const loadVinylLibrary = useCallback(async () => {
+    if (!vinylLibraryAvailable) return
+
+    try {
+      setIsVinylLibraryLoading(true)
+      const records = await listStoredVinylTracks()
+      hydrateUploadedVinylTracks(records)
+    } catch {
+      setVinylLibraryFeedback('Không tải được thư viện đĩa than trên thiết bị này.')
+    } finally {
+      setIsVinylLibraryLoading(false)
+    }
+  }, [hydrateUploadedVinylTracks, vinylLibraryAvailable])
 
   const loadRoomAmbers = useCallback(async () => {
     if (!token) {
@@ -419,6 +569,11 @@ export function RoomPage() {
   }, [loadRadioStations])
 
   useEffect(() => {
+    if (!vinylLibraryAvailable) return
+    void loadVinylLibrary()
+  }, [loadVinylLibrary, vinylLibraryAvailable])
+
+  useEffect(() => {
     if (activePhoneApp && !availablePhoneApps.includes(activePhoneApp)) {
       setActivePhoneApp(null)
     }
@@ -441,9 +596,22 @@ export function RoomPage() {
 
   useEffect(() => {
     const currentPlayback = vinylPlaybackRef.current
-    if (!currentPlayback) return
-    currentPlayback.masterGain.gain.value = Math.max(vinylVolume / 100, 0.01) * 0.52
+    if (currentPlayback) {
+      currentPlayback.masterGain.gain.value = Math.max(vinylVolume / 100, 0.01) * 0.52
+    }
+
+    const audio = vinylAudioRef.current
+    if (audio) {
+      audio.volume = Math.max(vinylVolume / 100, 0)
+    }
   }, [vinylVolume])
+
+  useEffect(() => {
+    if (vinylTracks.some((track) => track.id === selectedVinylTrackId)) return
+    stopVinylPlayback()
+    setSelectedVinylTrackId(DEFAULT_VINYL_TRACKS[0].id)
+    setVinylPlaying(false)
+  }, [selectedVinylTrackId, stopVinylPlayback, vinylTracks])
 
   useEffect(() => {
     const audio = radioAudioRef.current
@@ -472,8 +640,9 @@ export function RoomPage() {
   useEffect(() => {
     return () => {
       stopVinylPlayback()
+      revokeUploadedVinylUrls()
     }
-  }, [stopVinylPlayback])
+  }, [revokeUploadedVinylUrls, stopVinylPlayback])
 
   function openPhone(app?: PhoneApp) {
     setActiveDevice(null)
@@ -565,17 +734,85 @@ export function RoomPage() {
       return
     }
 
-    await startVinylPlayback(vinylTrackIndex)
-    if (!vinylPlaybackRef.current) return
+    const didStart = await playVinylTrack(currentVinylTrack)
+    if (!didStart) return
     setVinylPlaying(true)
   }
 
-  async function chooseVinylTrack(index: number) {
-    setVinylTrackIndex(index)
+  async function chooseVinylTrack(trackId: string) {
+    const nextTrack = vinylTracks.find((track) => track.id === trackId)
+    setSelectedVinylTrackId(trackId)
     if (!vinylPlaying) return
-    await startVinylPlayback(index)
-    if (!vinylPlaybackRef.current) return
+    const didStart = await playVinylTrack(nextTrack)
+    if (!didStart) return
     setVinylPlaying(true)
+  }
+
+  async function handleVinylFilesSelected(event: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? [])
+    event.target.value = ''
+
+    if (files.length === 0) return
+
+    if (!vinylLibraryAvailable) {
+      setVinylLibraryFeedback('Trình duyệt này chưa hỗ trợ lưu MP3 cục bộ cho đĩa than.')
+      return
+    }
+
+    const mp3Files = files.filter((file) => file.type === 'audio/mpeg' || file.name.toLowerCase().endsWith('.mp3'))
+    if (mp3Files.length === 0) {
+      setVinylLibraryFeedback('MIA chỉ nhận file .mp3 cho đĩa than.')
+      return
+    }
+
+    try {
+      if (vinylPlaying && currentVinylTrack?.kind === 'uploaded') {
+        stopVinylPlayback()
+        setVinylPlaying(false)
+      }
+      setIsVinylLibraryLoading(true)
+      const records = await saveStoredVinylFiles(mp3Files)
+      hydrateUploadedVinylTracks(records)
+      const newestTrack = records.find((track) => track.fileName === mp3Files[mp3Files.length - 1].name)
+      if (newestTrack) {
+        setSelectedVinylTrackId(newestTrack.id)
+      }
+
+      const skippedCount = files.length - mp3Files.length
+      setVinylLibraryFeedback(
+        skippedCount > 0
+          ? `Đã thêm ${mp3Files.length} MP3. Bỏ qua ${skippedCount} file không đúng định dạng.`
+          : `Đã thêm ${mp3Files.length} MP3 vào đĩa than của bạn.`,
+      )
+    } catch {
+      setVinylLibraryFeedback('Không thêm được MP3 vào đĩa than.')
+    } finally {
+      setIsVinylLibraryLoading(false)
+    }
+  }
+
+  async function removeVinylTrack(trackId: string) {
+    if (!vinylLibraryAvailable) return
+
+    try {
+      if (vinylPlaying && currentVinylTrack?.kind === 'uploaded') {
+        stopVinylPlayback()
+        setVinylPlaying(false)
+      }
+      setIsVinylLibraryLoading(true)
+      const records = await deleteStoredVinylTrack(trackId)
+      hydrateUploadedVinylTracks(records)
+      if (selectedVinylTrackId === trackId) {
+        stopVinylPlayback()
+        setVinylPlaying(false)
+        setSelectedVinylTrackId(DEFAULT_VINYL_TRACKS[0].id)
+      }
+      setVinylLibraryFeedback('Đã xoá MP3 khỏi đĩa than.')
+    } catch {
+      setVinylLibraryFeedback('Không xoá được MP3 này.')
+    } finally {
+      setIsVinylLibraryLoading(false)
+    }
   }
 
   function renderPhoneApp() {
@@ -648,8 +885,30 @@ export function RoomPage() {
             <div className={vinylPlaying ? 'vinyl-device-disc spinning' : 'vinyl-device-disc'} />
             <div className="vinyl-device-meta">
               <span className="mono-label">Đang chọn</span>
-              <strong>{VINYL_TRACKS[vinylTrackIndex]}</strong>
+              <strong>{currentVinylTrack?.title || DEFAULT_VINYL_TRACKS[0].title}</strong>
+              <p>{currentVinylTrack?.detail || DEFAULT_VINYL_TRACKS[0].detail}</p>
             </div>
+          </div>
+          <div className="vinyl-library-panel">
+            <div>
+              <span className="mono-label">Thư viện đĩa than</span>
+              <p className="helper-copy">
+                Bộ MIA có {DEFAULT_VINYL_TRACKS.length} loop mô phỏng không bản quyền.
+                {uploadedVinylTracks.length > 0
+                  ? ` Bạn đã thêm ${uploadedVinylTracks.length} file MP3 trên thiết bị này.`
+                  : ' Bạn cũng có thể thêm MP3 của riêng mình.'}
+              </p>
+            </div>
+            <label className="phone-button ghost vinyl-upload-button" htmlFor="vinyl-upload-input">
+              Thêm MP3
+              <input
+                accept=".mp3,audio/mpeg"
+                id="vinyl-upload-input"
+                multiple
+                type="file"
+                onChange={(event) => void handleVinylFilesSelected(event)}
+              />
+            </label>
           </div>
           <label className="slider-field">
             Âm lượng
@@ -660,18 +919,25 @@ export function RoomPage() {
               {vinylPlaying ? 'Tạm dừng' : 'Phát'}
             </button>
           </div>
+          {isVinylLibraryLoading ? <p className="helper-copy">Đang cập nhật thư viện MP3...</p> : null}
+          {vinylLibraryFeedback ? <p className="feedback success">{vinylLibraryFeedback}</p> : null}
           {vinylError ? <p className="feedback error">{vinylError}</p> : null}
           <div className="track-list">
-            {VINYL_TRACKS.map((track, index) => (
-              <button
-                key={track}
-                className={index === vinylTrackIndex ? 'track-row active' : 'track-row'}
-                onClick={() => void chooseVinylTrack(index)}
-                type="button"
-              >
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                <strong>{track}</strong>
-              </button>
+            {vinylTracks.map((track, index) => (
+              <div key={track.id} className={track.id === selectedVinylTrackId ? 'track-entry active' : 'track-entry'}>
+                <button className="track-row" onClick={() => void chooseVinylTrack(track.id)} type="button">
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <div className="track-row-body">
+                    <strong>{track.title}</strong>
+                    <small>{track.detail}</small>
+                  </div>
+                </button>
+                {track.kind === 'uploaded' ? (
+                  <button className="track-row-remove" onClick={() => void removeVinylTrack(track.id)} type="button">
+                    Xóa
+                  </button>
+                ) : null}
+              </div>
             ))}
           </div>
         </div>
@@ -894,8 +1160,14 @@ export function RoomPage() {
           <button className="room-object-vn room-object-vn-vinyl" onClick={() => openDevice('vinyl')} type="button">
             <div className="vinyl-mini-disc" />
             <span className="room-object-kicker">Đĩa than</span>
-            <strong>{VINYL_TRACKS[vinylTrackIndex]}</strong>
-            <small>{vinylPlaying ? 'Đang phát lofi' : 'Nhấn để mở player'}</small>
+            <strong>{currentVinylTrack?.title || DEFAULT_VINYL_TRACKS[0].title}</strong>
+            <small>
+              {vinylPlaying
+                ? currentVinylTrack?.kind === 'uploaded'
+                  ? 'Đang phát MP3 cá nhân'
+                  : 'Đang phát loop MIA'
+                : 'Nhấn để mở player'}
+            </small>
           </button>
 
           <button className="room-object-vn room-object-vn-radio" onClick={() => openDevice('radio')} type="button">
@@ -921,6 +1193,15 @@ export function RoomPage() {
         </div>
 
         <audio ref={radioAudioRef} preload="none" />
+        <audio
+          ref={vinylAudioRef}
+          preload="metadata"
+          onEnded={() => setVinylPlaying(false)}
+          onError={() => {
+            setVinylError('Không phát được file MP3 này.')
+            setVinylPlaying(false)
+          }}
+        />
 
         {activeDevice ? (
           <div className="device-overlay-vn">
