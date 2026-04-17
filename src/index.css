@@ -1564,6 +1564,10 @@ select:focus-visible {
   gap: 16px;
 }
 
+.panel-heading.inline > * {
+  min-width: 0;
+}
+
 .panel-heading h3 {
   font-size: 1.8rem;
 }
@@ -1571,6 +1575,7 @@ select:focus-visible {
 .phone-card-list {
   display: grid;
   gap: 12px;
+  min-width: 0;
 }
 
 .phone-card {
@@ -1578,6 +1583,7 @@ select:focus-visible {
   flex-direction: column;
   gap: 12px;
   padding: 16px;
+  min-width: 0;
   border-radius: 22px;
   background: rgba(255, 252, 247, 0.86);
   border: 1px solid rgba(98, 66, 39, 0.1);
@@ -1600,26 +1606,42 @@ select:focus-visible {
   gap: 16px;
 }
 
+.phone-card-head > div:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .phone-card h4 {
   margin: 6px 0 0;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.05rem;
   color: #2d231a;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.phone-card p,
+.panel-heading .helper-copy {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .mono-label {
   font-family: "Cascadia Code", Consolas, monospace;
   color: #86654a;
   font-size: 0.84rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .mini-meta {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 10px;
 }
 
 .mini-meta div {
+  min-width: 0;
   padding: 10px 12px;
   border-radius: 16px;
   background: rgba(233, 218, 201, 0.5);
@@ -1634,6 +1656,8 @@ select:focus-visible {
 
 .mini-meta dd {
   margin: 6px 0 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .pricing-grid {
@@ -1762,17 +1786,24 @@ select:focus-visible {
   margin: 0;
 }
 
+.history-mail-list li {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .status-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 104px;
+  max-width: 100%;
   padding: 8px 12px;
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
+  text-align: center;
 }
 
 .status-scheduled {
@@ -2888,13 +2919,14 @@ select:focus-visible {
 }
 
 .amber-chip-row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 148px), 1fr));
   gap: 10px;
 }
 
 .amber-chip {
-  min-width: 118px;
+  width: 100%;
+  min-width: 0;
   padding: 12px 14px;
   border: none;
   border-radius: 20px;
@@ -2910,6 +2942,14 @@ select:focus-visible {
 .amber-chip span {
   font-size: 0.8rem;
   color: #8a6847;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.amber-chip strong,
+.amber-tray-head strong {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .amber-chip.ready {
