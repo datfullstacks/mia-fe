@@ -34,6 +34,8 @@ interface VinylPlayback {
   stop: () => void
 }
 
+type BrowserAudioContext = typeof AudioContext
+
 const PHONE_APPS: PhoneApp[] = ['amber', 'history', 'pricing', 'settings']
 const GUEST_PHONE_APPS: PhoneApp[] = ['settings']
 const PHONE_APP_LABELS: Record<PhoneApp, string> = {
@@ -184,6 +186,12 @@ function buildNoiseBuffer(context: AudioContext) {
   return buffer
 }
 
+function getAudioContextClass(): BrowserAudioContext | null {
+  if (typeof window === 'undefined') return null
+
+  return window.AudioContext || (window as Window & { webkitAudioContext?: BrowserAudioContext }).webkitAudioContext || null
+}
+
 export function RoomPage() {
   const { currentUser, token } = useAuth()
   const isGuest = !currentUser
@@ -237,7 +245,12 @@ export function RoomPage() {
 
     try {
       const preset = VINYL_PRESETS[trackIndex] ?? VINYL_PRESETS[0]
-      const context = new window.AudioContext()
+      const AudioContextClass = getAudioContextClass()
+      if (!AudioContextClass) {
+        throw new Error('AudioContext is not supported in this browser')
+      }
+
+      const context = new AudioContextClass()
       const masterGain = context.createGain()
       const filter = context.createBiquadFilter()
       const padGain = context.createGain()
@@ -252,14 +265,19 @@ export function RoomPage() {
       const crackle = context.createBufferSource()
       const melodyPattern = preset.melody
 
-      masterGain.gain.value = Math.max(vinylVolume / 100, 0.01) * 0.18
+      await context.resume()
+      if (context.state !== 'running') {
+        throw new Error('AudioContext could not start')
+      }
+
+      masterGain.gain.value = Math.max(vinylVolume / 100, 0.01) * 0.36
       filter.type = 'lowpass'
-      filter.frequency.value = 1100
-      filter.Q.value = 0.6
-      padGain.gain.value = 0.08
-      harmonyGain.gain.value = 0.045
-      leadGain.gain.value = 0.035
-      noiseGain.gain.value = 0.012
+      filter.frequency.value = 1800
+      filter.Q.value = 0.9
+      padGain.gain.value = 0.12
+      harmonyGain.gain.value = 0.065
+      leadGain.gain.value = 0.05
+      noiseGain.gain.value = 0.016
       padOsc.type = 'triangle'
       harmonyOsc.type = 'sine'
       leadOsc.type = 'triangle'
@@ -296,7 +314,6 @@ export function RoomPage() {
       leadOsc.start()
       lowLfo.start()
       crackle.start()
-      await context.resume()
 
       vinylPlaybackRef.current = {
         context,
@@ -405,7 +422,7 @@ export function RoomPage() {
   useEffect(() => {
     const currentPlayback = vinylPlaybackRef.current
     if (!currentPlayback) return
-    currentPlayback.masterGain.gain.value = Math.max(vinylVolume / 100, 0.01) * 0.18
+    currentPlayback.masterGain.gain.value = Math.max(vinylVolume / 100, 0.01) * 0.36
   }, [vinylVolume])
 
   useEffect(() => {
