@@ -220,9 +220,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   const response = await fetch(resolveApiUrl(path), {
+    ...init,
     credentials: 'include',
     headers,
-    ...init,
   })
 
   if (!response.ok) {
