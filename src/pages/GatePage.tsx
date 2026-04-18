@@ -50,10 +50,6 @@ export function GatePage() {
     navigate('/room?app=unseal')
   }
 
-  function openAdminPortal() {
-    navigate('/admin')
-  }
-
   return (
     <div className="gate-shell">
       <section className="gate-panel gate-copy">
@@ -154,10 +150,6 @@ export function GatePage() {
 
         <button className="phone-button ghost full-width" onClick={openGuestUnlock} type="button">
           Open amber as guest
-        </button>
-
-        <button className="phone-button ghost full-width" onClick={openAdminPortal} type="button">
-          Open admin
         </button>
 
         <p className="helper-copy">
