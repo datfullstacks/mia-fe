@@ -223,9 +223,7 @@ export function AdminPage() {
         <section className="panel">
           <p className="panel-tag">Admin portal</p>
           <h2>Admin login required</h2>
-          <p className="helper-copy">
-            Sign in with the seeded admin account to review payments and amber metadata.
-          </p>
+          <p className="helper-copy">Sign in with an admin account to review payments and amber metadata.</p>
           <Link className="phone-button ghost" to="/gate">
             Go to Gate
           </Link>

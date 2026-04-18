@@ -5,7 +5,7 @@ import { usePageMeta } from '../lib/pageMeta'
 
 export function GatePage() {
   const navigate = useNavigate()
-  const { login, register } = useAuth()
+  const { currentUser, login, register } = useAuth()
   usePageMeta({
     title: 'MIA Gate | Gửi một lời nhắn cho bạn và bạn bè trong tương lai',
     description:
@@ -48,6 +48,10 @@ export function GatePage() {
 
   function openGuestUnlock() {
     navigate('/room?app=unseal')
+  }
+
+  function openAdminPortal() {
+    navigate('/admin')
   }
 
   return (
@@ -152,9 +156,12 @@ export function GatePage() {
           Open amber as guest
         </button>
 
-        <p className="helper-copy">
-          Seed accounts: `admin@mia.local / admin123` and `dat@mia.local / dat12345`.
-        </p>
+        {currentUser?.isAdmin ? (
+          <button className="phone-button ghost full-width" onClick={openAdminPortal} type="button">
+            Open admin
+          </button>
+        ) : null}
+
       </section>
     </div>
   )

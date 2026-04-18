@@ -5,10 +5,6 @@ export function SettingsPanel() {
   const navigate = useNavigate()
   const { currentUser, logout } = useAuth()
 
-  function openAdminPortal() {
-    navigate('/admin')
-  }
-
   async function handleLogout() {
     await logout()
     navigate('/gate')
@@ -38,9 +34,6 @@ export function SettingsPanel() {
         </label>
 
         <div className="button-row">
-          <button className="phone-button ghost" onClick={openAdminPortal} type="button">
-            Mở admin
-          </button>
           <button className="phone-button ghost" onClick={() => navigate('/gate')} type="button">
             Về cổng
           </button>
